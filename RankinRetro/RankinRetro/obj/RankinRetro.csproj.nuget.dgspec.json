@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\earli\\source\\repos\\RankinRetro\\RankinRetro\\RankinRetro.csproj": {}
+    "C:\\Users\\earli\\Desktop\\RankinRetro\\RankinRetro\\RankinRetro\\RankinRetro.csproj": {}
   },
   "projects": {
-    "C:\\Users\\earli\\source\\repos\\RankinRetro\\RankinRetro\\RankinRetro.csproj": {
+    "C:\\Users\\earli\\Desktop\\RankinRetro\\RankinRetro\\RankinRetro\\RankinRetro.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\earli\\source\\repos\\RankinRetro\\RankinRetro\\RankinRetro.csproj",
+        "projectUniqueName": "C:\\Users\\earli\\Desktop\\RankinRetro\\RankinRetro\\RankinRetro\\RankinRetro.csproj",
         "projectName": "RankinRetro",
-        "projectPath": "C:\\Users\\earli\\source\\repos\\RankinRetro\\RankinRetro\\RankinRetro.csproj",
+        "projectPath": "C:\\Users\\earli\\Desktop\\RankinRetro\\RankinRetro\\RankinRetro\\RankinRetro.csproj",
         "packagesPath": "C:\\Users\\earli\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\earli\\source\\repos\\RankinRetro\\RankinRetro\\obj\\",
+        "outputPath": "C:\\Users\\earli\\Desktop\\RankinRetro\\RankinRetro\\RankinRetro\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\earli\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -40,6 +40,10 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[7.0.12, )"
