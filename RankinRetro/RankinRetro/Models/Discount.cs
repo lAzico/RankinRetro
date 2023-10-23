@@ -11,7 +11,7 @@ namespace RankinRetro.Models
         [Required]
         public string Description { get; set; }
         [Required]
-        public decimal DiscountAmount { get; set; }
+        public float DiscountAmount { get; set; }
         
     }
 }

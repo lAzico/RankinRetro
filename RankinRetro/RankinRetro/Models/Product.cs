@@ -11,7 +11,7 @@ namespace RankinRetro.Models
         public int ProductId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public decimal Price { get; set; }
+        public float Price { get; set; }
         public int brandId { get; set; }
         public int categoryId { get; set; }
         public Size Size { get; set; }

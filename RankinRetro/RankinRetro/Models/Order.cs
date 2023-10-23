@@ -12,6 +12,6 @@ namespace RankinRetro.Models
         public int CustomerId { get; set; }
         public DateTime OrderDate {  get; set; }
         public Status Status { get; set; }
-        public decimal Total { get; set; }
+        public float Total { get; set; }
     }
 }
