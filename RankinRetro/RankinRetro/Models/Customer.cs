@@ -13,14 +13,21 @@ namespace RankinRetro.Models
         public string FirstName { get; set; }
         [Required]
         public string Surname { get; set; }
-
+        [Required]
+        public string Email {  get; set; }
         //Enum of titles
         public UserTitle Title { get; set; }
         [Required]
-        public string Address { get; set; }
+        public string AddressFirstline { get; set; }
+        public string AddressSecondline{ get; set; }
+        public string CityTown { get; set; }
+
+        [Required]
+        public string AddressPostcode { get; set; }
+
 
         //For recommendations of products
-        public string Gender { get; set; }
+        public Gender Gender { get; set; }
         public string Phone {  get; set; }
 
 
