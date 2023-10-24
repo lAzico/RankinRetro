@@ -148,6 +148,7 @@ namespace RunGroopWebApp.Data
                         DiscountAmount = 0.00f
                     },
                                 });
+                    context.SaveChanges();
                 }
                 if (!context.Products.Any())
                 {
@@ -190,6 +191,7 @@ namespace RunGroopWebApp.Data
                         ImageURL = "https://example.com/images/blouse1.jpg"
                     },
                     });
+                    context.SaveChanges();
 
                 }
             }
@@ -216,8 +218,10 @@ namespace RunGroopWebApp.Data
                 {
                     var newAdminUser = new Customer()
                     {
+                   
                         FirstName = "Chris",
                         Surname = "Coolguy",
+                        UserName = "ChrisCoolguy",
                         Email = adminUserEmail,
                         Title = UserTitle.Mr,
                         AddressFirstline = "15 Waterloo road",
@@ -232,13 +236,15 @@ namespace RunGroopWebApp.Data
                     await userManager.AddToRoleAsync(newAdminUser, UserRoles.Admin);
                 }
 
-                string appUserEmail = "user@etickets.com";
+
+                string appUserEmail = "jon.coolguy@gmail.com";
 
                 var newAppUser = new Customer()
                 {
                     FirstName = "Jonathan",
                     Surname = "Coolguy",
-                    Email = "jon.coolguy@gmail.com",
+                    UserName = "JonathanCoolguy",
+                    Email = appUserEmail,
                     Title = UserTitle.Mr,
                     AddressFirstline = "10 Waterloo road",
                     AddressSecondline = "",

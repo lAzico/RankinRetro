@@ -12,8 +12,8 @@ using RankinRetro.Data;
 namespace RankinRetro.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231024131905_FixingProductAndCustomerTable")]
-    partial class FixingProductAndCustomerTable
+    [Migration("20231024134231_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
