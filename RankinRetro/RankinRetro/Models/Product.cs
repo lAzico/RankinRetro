@@ -2,6 +2,7 @@
 
 using RankinRetro.Data.Enum;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RankinRetro.Models
 {
@@ -12,8 +13,10 @@ namespace RankinRetro.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public float Price { get; set; }
-        public int brandId { get; set; }
-        public int categoryId { get; set; }
+        [ForeignKey("BrandId")]
+        public int BrandId { get; set; }
+        [ForeignKey("CategoryId")]
+        public int CategoryId { get; set; }
         public Size Size { get; set; }
         public Colour Colour { get; set; }
         public Material Material { get; set; }

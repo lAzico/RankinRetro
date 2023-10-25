@@ -209,7 +209,19 @@ namespace RankinRetro.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<string>("Address")
+                    b.Property<string>("AddressFirstline")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressPostcode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressSecondline")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CityTown")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -221,6 +233,7 @@ namespace RankinRetro.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -231,9 +244,8 @@ namespace RankinRetro.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -371,6 +383,12 @@ namespace RankinRetro.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"));
 
+                    b.Property<int>("BrandId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Colour")
                         .HasColumnType("int");
 
@@ -393,12 +411,6 @@ namespace RankinRetro.Migrations
                         .HasColumnType("real");
 
                     b.Property<int>("Size")
-                        .HasColumnType("int");
-
-                    b.Property<int>("brandId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("categoryId")
                         .HasColumnType("int");
 
                     b.HasKey("ProductId");
