@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\earli\\Desktop\\RankinRetro\\RankinRetro\\rankinretro\\RankinRetro.csproj": {}
+    "C:\\Users\\earli\\Desktop\\RankinRetro\\RankinRetro\\RankinRetro\\RankinRetro.csproj": {}
   },
   "projects": {
-    "C:\\Users\\earli\\Desktop\\RankinRetro\\RankinRetro\\rankinretro\\RankinRetro.csproj": {
+    "C:\\Users\\earli\\Desktop\\RankinRetro\\RankinRetro\\RankinRetro\\RankinRetro.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\earli\\Desktop\\RankinRetro\\RankinRetro\\rankinretro\\RankinRetro.csproj",
+        "projectUniqueName": "C:\\Users\\earli\\Desktop\\RankinRetro\\RankinRetro\\RankinRetro\\RankinRetro.csproj",
         "projectName": "RankinRetro",
-        "projectPath": "C:\\Users\\earli\\Desktop\\RankinRetro\\RankinRetro\\rankinretro\\RankinRetro.csproj",
+        "projectPath": "C:\\Users\\earli\\Desktop\\RankinRetro\\RankinRetro\\RankinRetro\\RankinRetro.csproj",
         "packagesPath": "C:\\Users\\earli\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\earli\\Desktop\\RankinRetro\\RankinRetro\\rankinretro\\obj\\",
+        "outputPath": "C:\\Users\\earli\\Desktop\\RankinRetro\\RankinRetro\\RankinRetro\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\earli\\AppData\\Roaming\\NuGet\\NuGet.Config",
