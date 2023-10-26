@@ -8,15 +8,17 @@ namespace RankinRetro.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly ApplicationDbContext _context;
+
         private readonly UserManager<Customer> _userManager;
         private readonly SignInManager<Customer> _signInManager;
+        private readonly ApplicationDbContext _context;
 
-        public AccountController(ApplicationDbContext applicationDbContext, UserManager<Customer> userManager, SignInManager<Customer> signInManager)
+        public AccountController(ApplicationDbContext context, UserManager<Customer> userManager, SignInManager<Customer> signInManager)
         {
-            _context = applicationDbContext;
+            _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
+            
         }
         public IActionResult Login()
         {
@@ -33,12 +35,12 @@ namespace RankinRetro.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
+            
             if (!ModelState.IsValid)
-            {
-                return View(loginViewModel);
-            }
+            return View(loginViewModel);
+            
 
-            var user = await _userManager.FindByEmailAsync(loginViewModel.EmailAddress);
+            var user = await _userManager.FindByNameAsync(loginViewModel.EmailAddress);
             if (user != null) 
             {
                 var passwordCheck = await _userManager.CheckPasswordAsync(user, loginViewModel.Password);
@@ -65,23 +67,23 @@ namespace RankinRetro.Controllers
             {
                 return View(registerViewModel);
             }
-            var user = await _userManager.FindByEmailAsync(registerViewModel.Email);
+            var user = await _userManager.FindByNameAsync(registerViewModel.EmailAddress);
             if (user != null) 
             {
                 ModelState.AddModelError(string.Empty, "Email address is already in use");
                 return View(registerViewModel);
             }
 
-            var newUser = new Customer { Email = registerViewModel.Email, UserName = registerViewModel.Email, FirstName = registerViewModel.FirstName,
+            var newUser = new Customer { Email = registerViewModel.EmailAddress, UserName = registerViewModel.EmailAddress, FirstName = registerViewModel.FirstName,
                 Surname = registerViewModel.Surname, Title = registerViewModel.Title, AddressFirstline = registerViewModel.AddressFirstline,
                 AddressSecondline = registerViewModel.AddressSecondline, CityTown = registerViewModel.CityTown, AddressPostcode = registerViewModel.AddressPostcode,
                 Gender = registerViewModel.Gender, Phone = registerViewModel.Phone};
 
-            var newUserResponse = await _userManager.CreateAsync(newUser);
-            if (newUserResponse.Succeeded)
+            var newUserResponse = await _userManager.CreateAsync(newUser, registerViewModel.Password);
+            if (!newUserResponse.Succeeded)
             {
                 ModelState.AddModelError(string.Empty, "Could not create new User.");
-                return View(newUserResponse);
+                return View(registerViewModel);
             }
             return RedirectToAction("Login");
 

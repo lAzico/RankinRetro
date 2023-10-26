@@ -1,5 +1,87 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using RankinRetro.ViewModels;
+@using RankinRetro.Data.Enum;
+@model RegisterViewModel
 @{
+    ViewData["Title"] = "Register";
 }
+<div class="row">
+    <div class="col-md-6 offset-3">
+        <p>
+            <h4>Log in to your account</h4>
+        </p>
+        @if (TempData["Error"] != null)
+        {
+            <div class="col-md-12 alert alert-danger">
+                <span><b>Sorry!</b> - @TempData["Error"]</span>
+            </div>
+        }
+        <div class="row">
+            <div class="col-md-8 offset-2">
+                <form asp-action="Register">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="FirstName" class="control-label"></label>
+                        <input asp-for="FirstName" class="form-control">
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Surname" class="control-label"></label>
+                        <input asp-for="Surname" class="form-control">
+                        <span asp-validation-for="Surname" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Title" class="control-label"></label>
+                        <select asp-for="Title" class="form-control" asp-items="@Html.GetEnumSelectList<UserTitle>()"><option>--Select--</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Gender" class="control-label"></label>
+                        <select asp-for="Gender" class="form-control" asp-items="@Html.GetEnumSelectList<Gender>()"><option>--Select--</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AddressFirstline" class="control-label"></label>
+                        <input asp-for="AddressFirstline" class="form-control">
+                        <span asp-validation-for="AddressFirstline" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CityTown" class="control-label"></label>
+                        <input asp-for="CityTown" class="form-control">
+                        <span asp-validation-for="CityTown" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AddressSecondline" class="control-label"></label>
+                        <input asp-for="AddressSecondline" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AddressPostcode" class="control-label"></label>
+                        <input asp-for="AddressPostcode" class="form-control">
+                        <span asp-validation-for="AddressPostcode" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Phone" class="control-label"></label>
+                        <input asp-for="Phone" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="EmailAddress" class="control-label"></label>
+                        <input asp-for="EmailAddress" class="form-control">
+                        <span asp-validation-for="EmailAddress" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Password" class="control-label"></label>
+                        <input asp-for="Password" class="form-control">
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                <div class="form-group">
+                    <label asp-for="ConfirmPassword" class="control-label"></label>
+                    <input asp-for="ConfirmPassword" class="form-control">
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    
+                </div>
+                    <div class="form-group">
+                        <input class="btn btn-outline-success float right" type="submit" value="Log in" />
+                        <a class="btn btn-outline-secondary" asp-controller="Club" asp-action="Index">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
