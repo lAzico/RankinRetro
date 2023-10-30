@@ -221,7 +221,7 @@ namespace RunGroopWebApp.Data
                    
                         FirstName = "Chris",
                         Surname = "Coolguy",
-                        UserName = "ChrisCoolguy",
+                        UserName = adminUserEmail,
                         Email = adminUserEmail,
                         Title = UserTitle.Mr,
                         AddressFirstline = "15 Waterloo road",
@@ -243,7 +243,7 @@ namespace RunGroopWebApp.Data
                 {
                     FirstName = "Jonathan",
                     Surname = "Coolguy",
-                    UserName = "JonathanCoolguy",
+                    UserName = appUserEmail,
                     Email = appUserEmail,
                     Title = UserTitle.Mr,
                     AddressFirstline = "10 Waterloo road",
