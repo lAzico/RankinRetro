@@ -1,16 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RankinRetro.Interfaces;
 using RankinRetro.Models;
-using System.Diagnostics;
+
 
 namespace RankinRetro.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController()
         {
-            _logger = logger;
+            
         }
 
         public IActionResult Index()
