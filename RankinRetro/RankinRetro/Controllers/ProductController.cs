@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RankinRetro.Data.Enum;
 using RankinRetro.Interfaces;
 using RankinRetro.Models;
+using RankinRetro.ViewModels;
 
 namespace RankinRetro.Controllers
 {
@@ -28,7 +30,90 @@ namespace RankinRetro.Controllers
         }
         public IActionResult Create() 
         { 
+
             return View();
         }
+
+        public IActionResult Home()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var product = await _productRepository.GetByIdAsync(id);
+            if (product == null) return RedirectToAction("Home");
+            var productVM = new EditProductViewModel
+            {
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                CategoryId = product.CategoryId,
+                Size = product.Size,
+                Colour = product.Colour,
+                Material = product.Material,
+                ImageURL = product.ImageURL
+            };
+            return View(productVM);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, EditProductViewModel productVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Failed to edit Product");
+                return View("Edit", productVM);
+            }
+
+            var userProduct = await _productRepository.GetByIdNoTrackingAsync(id);
+            if (userProduct != null)
+            {
+                var product = new Product
+                {
+                    Name = userProduct.Name,
+                    Description = userProduct.Description,
+                    Price = userProduct.Price,
+                    CategoryId = userProduct.CategoryId,
+                    Size = userProduct.Size,
+                    Colour = userProduct.Colour,
+                    Material = userProduct.Material,
+                    ImageURL = userProduct.ImageURL
+                };
+                _productRepository.Update(product);
+                return RedirectToAction("Home");
+            }
+            else
+            {
+                return View(productVM);
+            }
+
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateProductViewModel productVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Home");
+            }
+
+            var product = new Product
+            {
+                Name = productVM.Name,
+                Description = productVM.Description,
+                Price = productVM.Price,
+                CategoryId = productVM.CategoryId,
+                Size = productVM.Size,
+                Colour = productVM.Colour,
+                Material = productVM.Material,
+                ImageURL = productVM.ImageURL
+            };
+
+            _productRepository.Add(product);
+            return RedirectToAction("Home");
+        }
+
+
     }
 }
