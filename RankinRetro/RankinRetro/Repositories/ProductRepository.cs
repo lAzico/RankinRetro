@@ -25,10 +25,20 @@ namespace RankinRetro.Repositories
             return Save();
         }
 
-        public async Task<IEnumerable<Product>> GetAll()
+        public async Task<IEnumerable<Brand>> GetAllBrands()
+        {
+            return await _context.Brands.ToListAsync();
+        }
+
+        public async Task<IEnumerable<Product>> GetAllProducts()
         {
            return await _context.Products.ToListAsync();
            
+        }
+
+        public async Task<IEnumerable<Category>> GetAllCategories()
+        {
+            return await _context.Categories.ToListAsync();
         }
 
         public async Task<IEnumerable<Product>> GetByCategory(int id)

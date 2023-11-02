@@ -42,6 +42,8 @@ namespace RankinRetro.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var product = await _productRepository.GetByIdAsync(id);
+            var categories = await _productRepository.GetAllCategories();
+            var brands = await _productRepository.GetAllBrands();
             if (product == null) return RedirectToAction("Home");
             var productVM = new EditProductViewModel
             {
@@ -49,6 +51,9 @@ namespace RankinRetro.Controllers
                 Description = product.Description,
                 Price = product.Price,
                 CategoryId = product.CategoryId,
+                BrandId = product.BrandId,
+                Brands = brands.ToList(),
+                Categories = categories.ToList(),
                 Size = product.Size,
                 Colour = product.Colour,
                 Material = product.Material,
@@ -66,6 +71,8 @@ namespace RankinRetro.Controllers
             }
 
             var userProduct = await _productRepository.GetByIdNoTrackingAsync(id);
+            
+
             if (userProduct != null)
             {
                 var product = new Product
@@ -73,6 +80,7 @@ namespace RankinRetro.Controllers
                     Name = userProduct.Name,
                     Description = userProduct.Description,
                     Price = userProduct.Price,
+                    BrandId = userProduct.BrandId,
                     CategoryId = userProduct.CategoryId,
                     Size = userProduct.Size,
                     Colour = userProduct.Colour,

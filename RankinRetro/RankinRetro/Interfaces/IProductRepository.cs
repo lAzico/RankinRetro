@@ -4,7 +4,10 @@ namespace RankinRetro.Interfaces
 {
     public interface IProductRepository
     {
-        Task<IEnumerable<Product>> GetAll();
+        Task<IEnumerable<Product>> GetAllProducts();
+
+        Task<IEnumerable<Category>> GetAllCategories();
+        Task<IEnumerable<Brand>> GetAllBrands();
         Task<Product> GetByIdAsync(int id);
 
         Task<Product> GetByIdNoTrackingAsync(int id);
