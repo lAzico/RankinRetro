@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\RankinRetro.props" />
-</Project>
