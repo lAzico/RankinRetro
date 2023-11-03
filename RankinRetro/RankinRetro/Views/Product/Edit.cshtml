@@ -3,7 +3,7 @@
 
 
 <form method="post" asp-action="Edit">
-    <input type="hidden" value="CustomerId" id="CustomerId" />
+    
     <div class="form-group">
         <div class="form-control">
             <label asp-for="Name">Name</label>
@@ -23,12 +23,14 @@
         <div class="form-control">
             <label asp-for="CategoryId">Category</label>
             <select asp-for="CategoryId" asp-items='new SelectList(Model.Categories, "CategoryId", "Name")' class="form-control"></select>
-            <input type="hidden" value="Categories" id="Categories" />
+            <input type="hidden" asp-for="Categories">
         </div>
         <div class="form-control">
             <label asp-for="BrandId">Brand</label>
             <select asp-for="BrandId" asp-items='new SelectList(Model.Brands, "BrandId", "Name")' class="form-control"></select>
+            <input type="hidden" asp-for="Brands">
         </div>
+            
         <div class="form-control">
             <label asp-for="Size">Size</label>
             <select asp-for="Size" asp-items="@Html.GetEnumSelectList<Size>()" class="form-control"></select>

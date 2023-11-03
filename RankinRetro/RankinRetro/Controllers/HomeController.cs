@@ -9,6 +9,7 @@ namespace RankinRetro.Controllers
     public class HomeController : Controller
     {
         private readonly IHomeRepository _homeRepository;
+        
 
         public HomeController(IHomeRepository homeRepository)
         {

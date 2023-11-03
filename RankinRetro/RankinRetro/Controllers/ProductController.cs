@@ -77,18 +77,19 @@ namespace RankinRetro.Controllers
             {
                 var product = new Product
                 {
-                    Name = userProduct.Name,
-                    Description = userProduct.Description,
-                    Price = userProduct.Price,
-                    BrandId = userProduct.BrandId,
-                    CategoryId = userProduct.CategoryId,
-                    Size = userProduct.Size,
-                    Colour = userProduct.Colour,
-                    Material = userProduct.Material,
-                    ImageURL = userProduct.ImageURL
+                    ProductId = id,
+                    Name = productVM.Name,
+                    Description = productVM.Description,
+                    Price = productVM.Price,
+                    BrandId = productVM.BrandId,
+                    CategoryId = productVM.CategoryId,
+                    Size = productVM.Size,
+                    Colour = productVM.Colour,
+                    Material = productVM.Material,
+                    ImageURL = productVM.ImageURL
                 };
                 _productRepository.Update(product);
-                return RedirectToAction("Home");
+                return RedirectToPage("");
             }
             else
             {

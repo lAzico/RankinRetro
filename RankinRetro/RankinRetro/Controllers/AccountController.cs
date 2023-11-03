@@ -46,7 +46,7 @@ namespace RankinRetro.Controllers
                 var passwordCheck = await _userManager.CheckPasswordAsync(user, loginViewModel.Password);
                 if (passwordCheck)
                 {
-                    var result = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, false, false);
+                    var result = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, true, false);
                     if (result.Succeeded)
                     {
                         return RedirectToAction("Index", "Home");
@@ -93,7 +93,7 @@ namespace RankinRetro.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Home");
+            return RedirectToAction("Login", "Account");
         }
     }
 }
