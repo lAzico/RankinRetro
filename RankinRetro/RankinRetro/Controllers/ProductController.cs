@@ -16,9 +16,28 @@ namespace RankinRetro.Controllers
         }
 
 
-        public IActionResult Details(int id)
+
+        public async Task<IActionResult> Details(int id)
         {
-            var results = _productRepository.GetByIdAsync(id);
+            var product = await _productRepository.GetByIdAsync(id);
+            var brands = await _productRepository.GetAllBrands();
+            var categories = await _productRepository.GetAllCategories();
+            var results = new DisplayProductViewModel
+
+            {
+                ProductId = product.ProductId,
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                CategoryId = product.CategoryId,
+                BrandId = product.BrandId,
+                brands = brands.ToList(),
+                categories = categories.ToList(),
+                Size = product.Size,
+                Colour = product.Colour,
+                Material = product.Material,
+                ImageURL = product.ImageURL
+            };
             return View(results);
         }
 
