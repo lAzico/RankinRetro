@@ -1,0 +1,56 @@
+﻿@model RankinRetro.ViewModels.DisplayProductViewModel
+
+<div class="container">
+    <h1 class="my-4">
+        @Model.Name
+        
+    </h1>
+
+    <div class="row">
+        <div class="col-md-8">
+            <img class="img" src="@Model.ImageURL" alt="" />
+        </div>
+
+
+        <div class="col-md-4">
+            <h1 class="my-2">Details</h1>
+            <p>@Model.Description</p>
+            <p>@Model.Colour</p>
+            @{
+                var categoryName = Model.categories.FirstOrDefault(c => c.CategoryId == Model.CategoryId)?.Name;
+                var brandName = Model.brands.FirstOrDefault(b => b.BrandId == Model.BrandId)?.Name;
+            }
+            <p>@categoryName</p>
+            <p>@brandName</p>
+            <p>@Model.Material</p>
+            <p>£@Model.Price</p>
+            <p>@Model.Size</p>
+        </div>
+        @if(User.Identity.IsAuthenticated && User.IsInRole("admin")){
+        <div class="btn-group">
+            <a type="btn btn-warning" asp-controller="Product" asp-action="Edit" asp-route-id="@Model.ProductId">Edit</a>
+                <a type="btn btn-warning" asp-controller="Product" asp-action="Delete" asp-route-id="@Model.ProductId">Delete</a>
+        </div>
+        
+        }
+        <h3 class="my-4">Related Products (WIP)</h3>
+        <div class="row">
+
+            <div class="col-md-3 col-sm-6 mb-4">
+                <a href="#">
+                    <img class="img-fluid" src="https://via.placeholder.com/500x300" alt="" />
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-4">
+                <a href="#">
+                    <img class="img-fluid" src="https://via.placeholder.com/500x300" alt="" />
+                </a>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-4">
+            <a href="#">
+                <img class="img-fluid" src="https://via.placeholder.com/500x300" alt="" />
+            </a>
+        </div>
+    </div>
+</div>
