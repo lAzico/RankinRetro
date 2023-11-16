@@ -10,9 +10,11 @@ namespace RankinRetro.Controllers
     {
         private readonly IProductRepository _productRepository;
 
+
         public ProductController(IProductRepository productRepository)
         {
             _productRepository = productRepository;
+
         }
 
 
@@ -47,15 +49,27 @@ namespace RankinRetro.Controllers
             _productRepository.Delete(product);
             return View(product);
         }
-        public IActionResult Create() 
-        { 
 
-            return View();
+        public async Task<IActionResult> DeleteProductHome(int id)
+        {
+            Product product = await _productRepository.GetByIdAsync(id);
+            _productRepository.Delete(product);
+            return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult Home()
+
+
+
+
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var productVM = new CreateProductViewModel();
+            var categories = await _productRepository.GetAllCategories();
+            var brands = await _productRepository.GetAllBrands();
+
+            productVM.Brands = brands.ToList();
+            productVM.Categories = categories.ToList();
+            return View(productVM);
         }
 
         public async Task<IActionResult> Edit(int id)
@@ -90,7 +104,7 @@ namespace RankinRetro.Controllers
             }
 
             var userProduct = await _productRepository.GetByIdNoTrackingAsync(id);
-            
+
 
             if (userProduct != null)
             {
@@ -118,19 +132,29 @@ namespace RankinRetro.Controllers
 
         }
 
+
+
         [HttpPost]
         public async Task<IActionResult> Create(CreateProductViewModel productVM)
         {
+            var categories = await _productRepository.GetAllCategories();
+            var brands = await _productRepository.GetAllBrands();
+
+            productVM.Brands = brands.ToList();
+            productVM.Categories = categories.ToList();
+
+
             if (!ModelState.IsValid)
             {
                 return RedirectToAction("Home");
             }
 
-            var product = new Product
+        var product = new Product
             {
                 Name = productVM.Name,
                 Description = productVM.Description,
                 Price = productVM.Price,
+                BrandId = productVM.BrandId,
                 CategoryId = productVM.CategoryId,
                 Size = productVM.Size,
                 Colour = productVM.Colour,
@@ -138,8 +162,9 @@ namespace RankinRetro.Controllers
                 ImageURL = productVM.ImageURL
             };
 
+
             _productRepository.Add(product);
-            return RedirectToAction("Home");
+            return Redirect("Details/" +  product.ProductId.ToString() );
         }
 
 
