@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RankinRetro.Data;
 using RankinRetro.Models;
 using RankinRetro.ViewModels;
@@ -18,8 +19,105 @@ namespace RankinRetro.Controllers
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
-            
         }
+
+        
+
+        public async Task<IActionResult> Profile()
+        {
+
+            if (User.Identity.IsAuthenticated)
+            {
+                var userID = _signInManager.UserManager.GetUserId(User);
+                Customer customer = await _userManager.FindByIdAsync(userID);
+                var profileVM = new ProfileViewModel
+                {
+                    Id = customer.Id,
+                    Email = customer.Email,
+                    FirstName = customer.FirstName,
+                    Surname = customer.Surname,
+                    Title = customer.Title,
+                    AddressFirstline = customer.AddressFirstline,
+                    AddressSecondline = customer.AddressSecondline,
+                    CityTown = customer.CityTown,
+                    AddressPostcode = customer.AddressPostcode,
+                    Gender = customer.Gender,
+                    Phone = customer.Phone
+                };
+
+                return View(profileVM);
+            }
+            return RedirectToAction("Error");
+        }
+
+        public async Task<IActionResult> Edit()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var userID = _signInManager.UserManager.GetUserId(User);
+                Customer customer = await _userManager.FindByIdAsync(userID);
+                var profileVM = new ProfileViewModel
+                {
+                    
+                   
+                    FirstName = customer.FirstName,
+                    Surname = customer.Surname,
+                    Title = customer.Title,
+                    AddressFirstline = customer.AddressFirstline,
+                    AddressSecondline = customer.AddressSecondline,
+                    CityTown = customer.CityTown,
+                    AddressPostcode = customer.AddressPostcode,
+                    Gender = customer.Gender,
+                    Phone = customer.Phone
+                };
+
+                return View(profileVM);
+            }
+            return RedirectToAction("Error");
+        }
+
+        [HttpPost]
+
+        public async Task<IActionResult> Edit(ProfileViewModel profileVM)
+        {
+            if(User.Identity.IsAuthenticated)
+            {
+                if (!ModelState.IsValid) {
+
+                    ModelState.AddModelError("", "Failed to edit customer details");
+
+                    return View("Edit", profileVM);
+                        
+                 }
+                
+                var customer = new Customer
+                {
+                    Id = profileVM.Id,
+                    Email = profileVM.Email,
+                    FirstName = profileVM.FirstName,
+                    Surname = profileVM.Surname,
+                    Title = profileVM.Title,
+                    AddressFirstline = profileVM.AddressFirstline,
+                    AddressSecondline = profileVM.AddressSecondline,
+                    CityTown = profileVM.CityTown,
+                    AddressPostcode = profileVM.AddressPostcode,
+                    Gender = profileVM.Gender,
+                    Phone = profileVM.Phone
+                };
+
+                await _userManager.UpdateAsync(customer);
+                return View(profileVM);
+            }
+            ModelState.AddModelError(string.Empty, "Invalid user");
+            return View(profileVM);
+
+        }
+        public IActionResult Error()
+        {
+            return View();
+        }
+
+
         public IActionResult Login()
         {
             var response = new LoginViewModel();
