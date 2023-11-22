@@ -52,14 +52,15 @@ namespace RankinRetro.Controllers
 
         public async Task<IActionResult> Edit()
         {
+            Customer signedInCustomer = await _signInManager.UserManager.GetUserAsync(User);
             if (User.Identity.IsAuthenticated)
             {
                 var userID = _signInManager.UserManager.GetUserId(User);
                 Customer customer = await _userManager.FindByIdAsync(userID);
                 var profileVM = new ProfileViewModel
                 {
-                    
-                   
+                    Email = signedInCustomer.Email,
+                    Id = signedInCustomer.Id,
                     FirstName = customer.FirstName,
                     Surname = customer.Surname,
                     Title = customer.Title,
@@ -77,40 +78,50 @@ namespace RankinRetro.Controllers
         }
 
         [HttpPost]
-
         public async Task<IActionResult> Edit(ProfileViewModel profileVM)
         {
-            if(User.Identity.IsAuthenticated)
+            if (User.Identity.IsAuthenticated)
             {
-                if (!ModelState.IsValid) {
-
-                    ModelState.AddModelError("", "Failed to edit customer details");
-
-                    return View("Edit", profileVM);
-                        
-                 }
-                
-                var customer = new Customer
+                if (!ModelState.IsValid)
                 {
-                    Id = profileVM.Id,
-                    Email = profileVM.Email,
-                    FirstName = profileVM.FirstName,
-                    Surname = profileVM.Surname,
-                    Title = profileVM.Title,
-                    AddressFirstline = profileVM.AddressFirstline,
-                    AddressSecondline = profileVM.AddressSecondline,
-                    CityTown = profileVM.CityTown,
-                    AddressPostcode = profileVM.AddressPostcode,
-                    Gender = profileVM.Gender,
-                    Phone = profileVM.Phone
-                };
+                    ModelState.AddModelError("", "Failed to edit customer details");
+                    return View("Edit", profileVM);
+                }
 
-                await _userManager.UpdateAsync(customer);
-                return View(profileVM);
+                Customer signedInCustomer = await _signInManager.UserManager.GetUserAsync(User);
+                if (signedInCustomer != null)
+                {
+                    signedInCustomer.FirstName = profileVM.FirstName;
+                    signedInCustomer.Surname = profileVM.Surname;
+                    signedInCustomer.Title = profileVM.Title;
+                    signedInCustomer.AddressFirstline = profileVM.AddressFirstline;
+                    signedInCustomer.AddressSecondline = profileVM.AddressSecondline;
+                    signedInCustomer.CityTown = profileVM.CityTown;
+                    signedInCustomer.AddressPostcode = profileVM.AddressPostcode;
+                    signedInCustomer.Gender = profileVM.Gender;
+                    signedInCustomer.Phone = profileVM.Phone;
+
+                    var result = await _userManager.UpdateAsync(signedInCustomer);
+
+                    if (result.Succeeded)
+                    {
+
+                        return RedirectToAction("Profile" );
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Failed to update customer details");
+                        return View(profileVM);
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
             }
+
             ModelState.AddModelError(string.Empty, "Invalid user");
             return View(profileVM);
-
         }
         public IActionResult Error()
         {
