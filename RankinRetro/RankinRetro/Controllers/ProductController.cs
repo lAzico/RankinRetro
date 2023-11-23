@@ -92,7 +92,7 @@ namespace RankinRetro.Controllers
                 Material = product.Material,
                 ImageURL = product.ImageURL
             };
-            return View(productVM);
+            return RedirectToAction("Index", "Home");
         }
         [HttpPost]
         public async Task<IActionResult> Edit(int id, EditProductViewModel productVM)

@@ -5,6 +5,7 @@
 
 <div class="row">
     <div class="col-md-8 offset-2">
+        <h1 class="h3 mb-3 offset-5 fw-normal">Edit profile</h1>
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -56,9 +57,54 @@
             </div>
             <div class="form-group">
                 <input class="btn btn-outline-success float right" type="submit" value="Update profile" />
-                <a class="btn btn-outline-secondary" asp-controller="Account" asp-action="Profile">Cancel</a>
+                <a class="btn btn-outline-danger" asp-controller="Account" asp-action="Profile">Cancel</a>
             </div>
         </form>
     </div>
 </div>
 
+<style>
+    .row {
+        margin-top: 20px;
+    }
+
+    .col-md-8 {
+        margin: auto;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    select {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+    }
+
+    .form-control {
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+    }
+
+    .btn {
+        margin-right: 10px;
+    }
+
+    .float-right {
+        float: right;
+    }
+
+    .btn-outline-secondary{
+        background-color: #ffc107;
+        color: darkred;
+        border: 1px solid #ffc107;
+    }
+</style>

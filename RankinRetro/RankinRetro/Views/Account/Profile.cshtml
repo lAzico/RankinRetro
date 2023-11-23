@@ -3,54 +3,92 @@
 
 @model ProfileViewModel
 
+    
+
 <div class="row">
+
     <div class="col-md-8 offset-2">
+        <h1 class="h3 mb-3 offset-5 fw-normal">Profile details</h1>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+        <div class="form-container">
                 <label asp-for="Email" class="control-label"></label>
                 <p>@Model.Email</p>
             </div>
-            <div class="form-group">
+        <div class="form-container">
                 <label asp-for="FirstName" class="control-label"></label>
             <p>@Model.FirstName</p>
             </div>
-            <div class="form-group">
+        <div class="form-container">
                 <label asp-for="Surname" class="control-label"></label>
             <p>@Model.Surname</p>
             </div>
-            <div class="form-group">
+        <div class="form-container">
                 <label asp-for="Title" class="control-label"></label>
             <p>@Model.Title</p>
             </div>
-            <div class="form-group">
+        <div class="form-container">
                 <label asp-for="Gender" class="control-label"></label>
             <p>@Model.Gender</p>
             </div>
-            <div class="form-group">
+        <div class="form-container">
                 <label asp-for="AddressFirstline" class="control-label"></label>
             <p>@Model.AddressFirstline</p>
             </div>
-            <div class="form-group">
+        <div class="form-container">
                 <label asp-for="CityTown" class="control-label"></label>
             <p>@Model.CityTown</p>
             </div>
-            <div class="form-group">
+        @if (Model.AddressSecondline != null)
+        {
+            <div class="form-container">
                 <label asp-for="AddressSecondline" class="control-label"></label>
-            <p>@Model.AddressSecondline</p>
+            <p>
+                @Model.AddressSecondline</p>
+            
+
             </div>
-            <div class="form-group">
+            }
+        <div class="form-container">
                 <label asp-for="AddressPostcode" class="control-label"></label>
             <p>@Model.AddressPostcode</p>
             </div>
-            <div class="form-group">
+        <div class="form-container">
                 <label asp-for="Phone" class="control-label"></label>
             <p>@Model.Phone</p>
             </div>
 
-        <a type="btn btn-warning" asp-controller="Account" asp-action="Edit">Edit Profile</a>
+        <a class="btn btn-outline-warning" asp-controller="Account" asp-action="Edit">Edit Profile</a>
             
 
         
     </div>
 </div>
 
+<style>
+    .row {
+        margin-top: 20px;
+    }
+
+    .col-md-8 {
+        margin: auto;
+    }
+
+    .form-container {
+        border: 1px solid #ced4da;
+        border-radius: 2px;
+        padding: 7px;
+        margin-bottom: 5px;
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    p {
+        margin: 0; 
+    }
+
+
+</style>

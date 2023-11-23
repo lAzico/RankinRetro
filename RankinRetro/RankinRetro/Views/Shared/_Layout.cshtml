@@ -19,31 +19,31 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+
+
                         @if (!User.Identity.IsAuthenticated)
                         {
-                            <li class="nav-item">
+
+                            <li class="nav-item" style="margin-left:auto">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
                             </li>
+
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
                             </li>
                         }
                         else
                         {
-                            <li class="nav-item">
+                            <li class="nav-item" style="margin-left:auto">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Profile">User profile</a>
+                            </li>
+
+                            <li class="nav-item" >
                                 <form asp-area="" asp-controller="Account" asp-action="Logout">
                                     <button class="btn btn-outline-danger">Logout</button>
                                 </form>
                             </li>
-                            <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Profile">User profile</a>
-                            </li>
+
                         }
                     </ul>
                 </div>
@@ -67,3 +67,8 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+<style>
+    nav-item-right{
+        margin-left:auto
+    }
+</style>
