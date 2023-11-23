@@ -28,8 +28,12 @@
         </div>
         @if(User.Identity.IsAuthenticated && User.IsInRole("admin")){
         <div class="btn-group">
-            <a type="btn btn-warning" asp-controller="Product" asp-action="Edit" asp-route-id="@Model.ProductId">Edit</a>
-                <a type="btn btn-warning" asp-controller="Product" asp-action="Delete" asp-route-id="@Model.ProductId">Delete</a>
+            <a type="btn btn-outline-warning" asp-controller="Product" asp-action="Edit" asp-route-id="@Model.ProductId">
+                <button class="btn btn-outline-warning">Edit</button>
+            </a>
+            <a asp-controller="Product" asp-action="Delete" asp-route-id="@Model.ProductId">
+            <button class="btn btn-outline-danger">Delete</button>
+            </a>
         </div>
         
         }
