@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using RankinRetro.Data.Enum;
 using RankinRetro.Interfaces;
 using RankinRetro.Models;
+using RankinRetro.Services;
 using RankinRetro.ViewModels;
 
 namespace RankinRetro.Controllers
@@ -9,12 +11,15 @@ namespace RankinRetro.Controllers
     public class ProductController : Controller
     {
         private readonly IProductRepository _productRepository;
+        private readonly AzureStorageConfig _config;
+        private readonly ImageService _imageService;
 
 
-        public ProductController(IProductRepository productRepository)
+        public ProductController(IProductRepository productRepository, IOptions<AzureStorageConfig> config)
         {
             _productRepository = productRepository;
-
+            _config = config.Value;
+            
         }
 
 
@@ -135,36 +140,94 @@ namespace RankinRetro.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateProductViewModel productVM)
+        public async Task<IActionResult> Create(CreateProductViewModel productVM, ICollection<IFormFile> files)
         {
             var categories = await _productRepository.GetAllCategories();
             var brands = await _productRepository.GetAllBrands();
+            bool isUploaded = false;
 
-            productVM.Brands = brands.ToList();
-            productVM.Categories = categories.ToList();
-
-
-            if (!ModelState.IsValid)
+            try
             {
-                return RedirectToAction("Home");
+                if (files.Count == 0)
+                    return BadRequest("No files received from the upload");
+                if (_config.AccountKey == string.Empty || _config.AccountName == string.Empty)
+                    return BadRequest("Sorry, can't retrieve your storage details appsettings.js");
+                if (_config.ImageContainer == string.Empty)
+
+                    foreach (var formFile in files)
+                    {
+                        if (ImageService.isImage(formFile))
+                        {
+                            if (formFile.Length > 0)
+                            {
+                                using (Stream stream = formFile.OpenReadStream())
+                                {
+                                    isUploaded = await ImageService.UploadFileToStorage(stream, formFile.FileName, productVM.Name, _config);
+                                    productVM.Brands = brands.ToList();
+                                    productVM.Categories = categories.ToList();
+
+
+
+                                    if (!ModelState.IsValid)
+                                    {
+                                        return RedirectToAction("Home");
+                                    }
+                                    if (isUploaded)
+                                    {
+                                        var URLList = await ImageService.GetThumbNailUrls(_config);
+                                        foreach (var url in URLList)
+                                        {
+                                            if (URLList.Contains(productVM.Name))
+                                            {
+                                                var URLProduct = url;
+
+                                                var product = new Product
+                                                {
+                                                    Name = productVM.Name,
+                                                    Description = productVM.Description,
+                                                    Price = productVM.Price,
+                                                    BrandId = productVM.BrandId,
+                                                    CategoryId = productVM.CategoryId,
+                                                    Size = productVM.Size,
+                                                    Colour = productVM.Colour,
+                                                    Material = productVM.Material,
+                                                    ImageURL = URLProduct
+                                                };
+
+
+                                                _productRepository.Add(product);
+                                                return Redirect("Details/" + product.ProductId.ToString());
+                                            }
+                                            else return BadRequest("The image couldn't be uploaded to storage");
+                                        }
+                                        
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                return new UnsupportedMediaTypeResult();
+                            }
+                        }
+
+                        if (isUploaded)
+                        {
+                            if (_config.ThumbnailContainer != string.Empty)
+                                return new AcceptedAtActionResult("GetThumbnails", "Images", null, null);
+                            else
+                                return new AcceptedResult();
+                        }
+                        else return BadRequest("The image couldn't be uploaded to storage");
+                    }
+                return BadRequest("No Image uploaded or processed");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
 
-        var product = new Product
-            {
-                Name = productVM.Name,
-                Description = productVM.Description,
-                Price = productVM.Price,
-                BrandId = productVM.BrandId,
-                CategoryId = productVM.CategoryId,
-                Size = productVM.Size,
-                Colour = productVM.Colour,
-                Material = productVM.Material,
-                ImageURL = productVM.ImageURL
-            };
 
 
-            _productRepository.Add(product);
-            return Redirect("Details/" +  product.ProductId.ToString() );
         }
 
 

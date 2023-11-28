@@ -19,7 +19,7 @@ namespace RankinRetro.ViewModels
         public Size Size { get; set; }
         public Colour Colour { get; set; }
         public Material Material { get; set; }
-        public string ImageURL { get; set; }
+        public IFormFile ImageURL { get; set; }
 
 
     }

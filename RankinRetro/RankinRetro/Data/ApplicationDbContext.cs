@@ -20,6 +20,7 @@ namespace RankinRetro.Data
         public DbSet<ReviewAndRating> ReviewsAndRatings { get; set; }
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
         public DbSet<Discount> Discounts { get; set; }
+        public DbSet<AzureStorageConfig> Configs { get; set; }
 
 
     }

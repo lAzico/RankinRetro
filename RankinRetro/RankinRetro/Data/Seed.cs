@@ -194,6 +194,22 @@ namespace RunGroopWebApp.Data
                     context.SaveChanges();
 
                 }
+                if (!context.Configs.Any())
+                {
+                    context.Configs.AddRange(new List<AzureStorageConfig>()
+                    {
+                        new AzureStorageConfig()
+                        {
+                            AccountName = "rungroops",
+                            AccountKey = "+wB/SHgCcmDs7OI6X4yz/5OKToGJIm0JDq5wAM64MT+4q5x6ENqDDm4EZ8o3WWJmYgDNOxKxEdiL+AStcpaIGQ==",
+                            ImageContainer = "imguploadrr",
+                            ThumbnailContainer = "thumbnails"
+                            
+
+                        }
+
+                    });
+                }
             }
         }
 
