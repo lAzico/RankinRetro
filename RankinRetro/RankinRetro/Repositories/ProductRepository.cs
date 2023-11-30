@@ -69,5 +69,10 @@ namespace RankinRetro.Repositories
             _context.Update(product);
             return Save();
         }
+
+        public async Task<AzureStorageConfig> GetAzureStorageConfigAsync(string id)
+        {
+            return await _context.Configs.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+        }
     }
 }

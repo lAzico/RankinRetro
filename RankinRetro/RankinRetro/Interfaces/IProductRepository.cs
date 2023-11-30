@@ -13,6 +13,8 @@ namespace RankinRetro.Interfaces
         Task<Product> GetByIdNoTrackingAsync(int id);
         Task<IEnumerable<Product>> GetByCategory(int id);
 
+        Task<AzureStorageConfig> GetAzureStorageConfigAsync(string id);
+
         bool Add(Product product);
         bool Update(Product product);
         bool Delete(Product product);

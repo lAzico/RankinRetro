@@ -10,9 +10,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using RankinRetro.Data;
 
 public class ImageService
 {
+
     public static bool isImage(IFormFile file)
     {
         if (file.ContentType.Contains("image"))
@@ -28,6 +30,7 @@ public class ImageService
     public static async Task<bool> UploadFileToStorage(Stream fileStream, string fileName, string productName,
                                                             AzureStorageConfig _storageConfig)
     {
+
         // Create a URI to the blob
         Uri blobUri = new Uri("https://" +
                               _storageConfig.AccountName +
@@ -49,7 +52,7 @@ public class ImageService
         return await Task.FromResult(true);
     }
 
-    public static async Task<List<string>> GetThumbNailUrls(AzureStorageConfig _storageConfig)
+    public static async Task<List<string>> GetThumbNailUrls(AzureStorageConfig _storageConfig, string productName)
     {
         List<string> thumbnailUrls = new List<string>();
 
@@ -60,7 +63,7 @@ public class ImageService
         BlobServiceClient blobServiceClient = new BlobServiceClient(accountUri);
 
         // Get reference to the container
-        BlobContainerClient container = blobServiceClient.GetBlobContainerClient(_storageConfig.ThumbnailContainer);
+        BlobContainerClient container = blobServiceClient.GetBlobContainerClient(productName);
 
         if (container.Exists())
         {
