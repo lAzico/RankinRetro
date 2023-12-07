@@ -157,12 +157,12 @@ namespace RankinRetro.Controllers
             try
             {
 
-                if (_config.AccountKey == string.Empty || _config.AccountName == string.Empty)
+                if (config.AccountKey == string.Empty || config.AccountName == string.Empty)
                 {
                     return BadRequest("Sorry, can't retrieve your storage details from appsettings.js");
                 }
 
-                if (_config.ImageContainer == string.Empty)
+                if (config.ImageContainer == string.Empty)
                 {
                     return BadRequest("Image container is not configured");
                 }
@@ -182,7 +182,11 @@ namespace RankinRetro.Controllers
                                 var URLList = await ImageService.GetThumbNailUrls(config, productVM.Name);
                                 foreach (var url in URLList)
                                 {
-                                    if (URLList.Contains(productVM.Name))
+                                    Console.Write(url);
+                                    var consoleURL = "https://" + config.AccountName + ".blob.core.windows.net/" + config.ImageContainer + "/" + productVM.Name + "/" + productVM.ImageURL.FileName;
+                                    if (URLList.Contains("https://" + config.AccountName + ".blob.core.windows.net/" + config.ImageContainer + "/" + productVM.Name + "/" + productVM.ImageURL.FileName))
+
+
                                     {
                                         var URLProduct = url;
 

@@ -63,7 +63,7 @@ public class ImageService
         BlobServiceClient blobServiceClient = new BlobServiceClient(accountUri);
 
         // Get reference to the container
-        BlobContainerClient container = blobServiceClient.GetBlobContainerClient(productName);
+        BlobContainerClient container = blobServiceClient.GetBlobContainerClient(_storageConfig.ImageContainer);
 
         if (container.Exists())
         {
