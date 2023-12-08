@@ -194,6 +194,7 @@ namespace RunGroopWebApp.Data
                     context.SaveChanges();
 
                 }
+
             }
         }
 

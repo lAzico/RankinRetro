@@ -2,7 +2,7 @@
 @using RankinRetro.Data.Enum
 
 
-<form method="post" asp-action="Create">
+<form method="post" asp-action="Create" enctype="multipart/form-data">
 
     <div class="form-group">
         <div class="form-control">
@@ -45,7 +45,8 @@
         </div>
         <div class="form-control">
             <label asp-for="ImageURL">Image</label>
-            <input asp-for="ImageURL" class="form-control" placeholder="Enter Image URL" />
+            <input asp-for="ImageURL" class="form-control" placeholder="Upload image" type="file">
+            <span asp-validation-for="ImageURL" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
