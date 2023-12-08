@@ -16,7 +16,7 @@ namespace RankinRetro.Interfaces
         Task<AzureStorageConfig> GetAzureStorageConfigAsync(string id);
 
         bool Add(Product product);
-        bool Update(Product product);
+        Task<bool> Update(Product product);
         bool Delete(Product product);
         bool Save();
     }

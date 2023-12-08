@@ -96,9 +96,9 @@ namespace RankinRetro.Controllers
                 Size = product.Size,
                 Colour = product.Colour,
                 Material = product.Material,
-                ImageURL = product.ImageURL
+                
             };
-            return RedirectToAction("Index", "Home");
+            return View(productVM);
         }
         [HttpPost]
         public async Task<IActionResult> Edit(int id, EditProductViewModel productVM)
@@ -110,34 +110,86 @@ namespace RankinRetro.Controllers
             }
 
             var userProduct = await _productRepository.GetByIdNoTrackingAsync(id);
+            var configTask = _productRepository.GetAzureStorageConfigAsync("1");
+            var config = await configTask;
+            var categories = await _productRepository.GetAllCategories();
+            var brands = await _productRepository.GetAllBrands();
+            bool isUploaded = false;
 
-
-            if (userProduct != null)
+            try
             {
-                var product = new Product
+
+                if (config.AccountKey == string.Empty || config.AccountName == string.Empty)
                 {
-                    ProductId = id,
-                    Name = productVM.Name,
-                    Description = productVM.Description,
-                    Price = productVM.Price,
-                    BrandId = productVM.BrandId,
-                    CategoryId = productVM.CategoryId,
-                    Size = productVM.Size,
-                    Colour = productVM.Colour,
-                    Material = productVM.Material,
-                    ImageURL = productVM.ImageURL
-                };
-                _productRepository.Update(product);
-                return RedirectToPage("");
+                    return BadRequest("Sorry, can't retrieve your storage details from appsettings.js");
+                }
+
+                if (config.ImageContainer == string.Empty)
+                {
+                    return BadRequest("Image container is not configured");
+                }
+
+                if (ImageService.isImage(productVM.ImageURL))
+                {
+                    if (productVM.ImageURL.Length > 0)
+                    {
+                        using (Stream stream = productVM.ImageURL.OpenReadStream())
+                        {
+                            isUploaded = await ImageService.UploadFileToStorage(stream, productVM.ImageURL.FileName, productVM.Name, config);
+
+                            if (isUploaded)
+                            {
+                                var thumbnailUrls = await ImageService.GetThumbNailUrls(config, productVM.Name);
+                                productVM.Brands = brands.ToList();
+                                productVM.Categories = categories.ToList();
+                                foreach (var url in thumbnailUrls)
+                                {
+                                    if (url.Contains("https://" + config.AccountName + ".blob.core.windows.net/" + config.ImageContainer + "/" + productVM.Name + "/" + productVM.ImageURL.FileName))
+
+
+                                    {
+                                        var URLProduct = url;
+
+
+                                        if (userProduct != null)
+                                        {
+                                            var product = new Product
+                                            {
+                                                ProductId = id,
+                                                Name = productVM.Name,
+                                                Description = productVM.Description,
+                                                Price = productVM.Price,
+                                                BrandId = productVM.BrandId,
+                                                CategoryId = productVM.CategoryId,
+                                                Size = productVM.Size,
+                                                Colour = productVM.Colour,
+                                                Material = productVM.Material,
+                                                ImageURL = URLProduct
+                                            };
+
+                                            await _productRepository.Update(product);
+                                            return RedirectToAction("Index", "Home");
+                                        }
+                                    }
+                                }
+                            }
+
+
+
+                        }
+
+                    }
+                    
+                }
+                return BadRequest("Invalid input or image format");
             }
-            else
+
+            catch (Exception ex)
             {
-                return View(productVM);
+                return BadRequest(ex.Message);
             }
-
-
         }
-
+        
 
 
         [HttpPost]

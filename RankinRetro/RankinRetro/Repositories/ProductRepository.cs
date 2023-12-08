@@ -64,7 +64,7 @@ namespace RankinRetro.Repositories
             return saved > 0 ? true : false;
         }
 
-        public bool Update(Product product)
+        public async Task<bool> Update(Product product)
         {
             _context.Update(product);
             return Save();
