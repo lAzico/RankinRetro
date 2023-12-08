@@ -6,5 +6,6 @@ namespace RankinRetro.Repositories
     {
         Task<List<Product>> GetAllProducts();
         Task<List<Category>> GetCategories();
+        Task<List<Brand>> GetBrands();
     }
 }
