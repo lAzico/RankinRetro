@@ -135,7 +135,7 @@ namespace RankinRetro.Repositories
                 var cart = await GetCart(userId);
                 if (cart != null)
                 {
-                    var cartItem = _context.ShoppingCartDetail.FirstOrDefaultAsync(a => a.ShoppingCartId == cart.ShoppingCartId && a.ProductId == productID);
+                    var cartItem = _context.ShoppingCartDetail.FirstOrDefault(a => a.ShoppingCartId == cart.ShoppingCartId && a.ProductId == productID);
                     if (cartItem == null)
                     {
                         throw new Exception("No items in cart");
@@ -150,7 +150,10 @@ namespace RankinRetro.Repositories
                         _context.SaveChanges();
                     }
                 }
+                var cartItemCount = await GetCartItemCount(userId);
+                return cartItemCount;
             }
+            else { throw new Exception("Invalid user "); }
         }
     }
 }

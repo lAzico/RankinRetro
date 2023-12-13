@@ -1,0 +1,29 @@
+﻿
+@model ShoppingCart
+
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Remove</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cartItem in Model.Details)
+            {
+                <tr>
+                    <td>@cartItem.Product.Name</td>
+                    <td>@cartItem.Quantity</td>
+                    <td>@cartItem.Price</td>
+                    <td><button type="button" class="btn btn-danger" onclick="RemoveItem(@cartItem.ProductId)">Remove</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h2></h2>
+
+    <button type="submit" class="btn btn-primary">Proceed to Checkout</button>/checkout">Proceed to Checkout</a>

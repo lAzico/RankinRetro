@@ -1,4 +1,5 @@
 ﻿@model RankinRetro.ViewModels.HomeViewModel
+
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<Customer> SignInManager
 @{
@@ -34,6 +35,11 @@
                     </a>
                     <form asp-controller="Product" asp-action="DeleteProductHome" asp-route-id="@item.ProductId">
                         <button class="btn btn-outline-danger">Delete</button>
+                    </form>
+                    <form method="post" action="~/Cart/AddItem">
+                        <input type="hidden" name="ProductId" value="@item.ProductId" />
+                        <input type="hidden" name="Quantity" value="1" />
+                        <button type="submit">Add To Cart</button>
                     </form>
     }                  
                       
