@@ -17,13 +17,20 @@
                 <tr>
                     <td>@cartItem.Product.Name</td>
                     <td>@cartItem.Quantity</td>
-                    <td>@cartItem.Price</td>
-                    <td><button type="button" class="btn btn-danger" onclick="RemoveItem(@cartItem.ProductId)">Remove</button></td>
-                </tr>
+                    <td>£@cartItem.Price</td>
+
+                <td>
+                <form method="post" action="~/Cart/RemoveItem">
+                     <input type="hidden" name="ProductId" value="@cartItem.ProductId">
+                    <button type="submit" class="btn btn-danger">Remove</button>
+                </form>
+                </td>
+            </tr>
             }
         </tbody>
+        
     </table>
 
-    <h2></h2>
+<h2>Total price: £@ViewBag.TotalPrice</h2>
 
-    <button type="submit" class="btn btn-primary">Proceed to Checkout</button>/checkout">Proceed to Checkout</a>
+    <button type="submit" class="btn btn-primary">Proceed to Checkout</button></a>

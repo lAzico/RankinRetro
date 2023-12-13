@@ -13,15 +13,12 @@ namespace RankinRetro.Controllers
             _cartRepository = cartRepository;
         }
 
-        public async Task<IActionResult> AddItem(int productId, int qty = 1, int redirect = 0)
+        public async Task<IActionResult> AddItem(int productId, int qty = 1)
         {
             
             var cartCount = await _cartRepository.AddItem(productId, qty);
-            if (redirect == 0)
-            {
-                return Ok(cartCount);
-            }
-            return RedirectToAction("GetUserCart");
+
+            return RedirectToAction("Index", "Home");
         }
 
         public async Task<IActionResult> RemoveItem(int productId)
@@ -32,6 +29,7 @@ namespace RankinRetro.Controllers
         public async Task<IActionResult> GetUserCart()
         {
             var cart = await _cartRepository.GetUserCart();
+            ViewBag.TotalPrice = cart.Details.Sum(x => x.Price * x.Quantity);
             return View(cart);
         }
 

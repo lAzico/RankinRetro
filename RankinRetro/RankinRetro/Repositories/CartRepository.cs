@@ -35,21 +35,15 @@ namespace RankinRetro.Repositories
                 if (!string.IsNullOrEmpty(userId))
                 {
                     var cart = await GetCart(userId);
-                    if (cart != null)
-                    {
-                        _context.ShoppingCarts.Add(cart);
-                    }
-
-                    else
+                    if (cart == null)
                     {
                         cart = new ShoppingCart
                         {
                             CustomerId = userId,
                         };
                         _context.ShoppingCarts.Add(cart);
-
-
                     }
+
                     _context.SaveChanges();
 
                     var cartItem = _context.ShoppingCartDetail.FirstOrDefault(a => a.ShoppingCartId == cart.ShoppingCartId && a.ProductId == productID);
@@ -65,7 +59,7 @@ namespace RankinRetro.Repositories
                             ProductId = productID,
                             ShoppingCartId = cart.ShoppingCartId,
                             Quantity = qty,
-                            Price = product.Price
+                            Price = (product.Price)
                         };
                         _context.ShoppingCartDetail.Add(cartItem);
                     }
@@ -115,8 +109,8 @@ namespace RankinRetro.Repositories
             {
                 var shoppingCart = await _context.ShoppingCarts.Include(a => a.Details)
                                                                .ThenInclude(a => a.Product)
-                                                               .ThenInclude(a => a.CategoryId)
                                                                .Where(a => a.CustomerId == userId).FirstOrDefaultAsync();
+                
                 return shoppingCart;
 
             }
@@ -149,6 +143,7 @@ namespace RankinRetro.Repositories
                         cartItem.Quantity = cartItem.Quantity - 1;
                         _context.SaveChanges();
                     }
+                    _context.SaveChanges();
                 }
                 var cartItemCount = await GetCartItemCount(userId);
                 return cartItemCount;

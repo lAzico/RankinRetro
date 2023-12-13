@@ -12,7 +12,7 @@ namespace RankinRetro.Models
         [Required]
         public int Quantity { get; set; }
         [Required]
-        public double Price { get; set; }
+        public decimal Price { get; set; }
         public Product Product { get; set; }
         public ShoppingCart ShoppingCart { get; set; }
     }

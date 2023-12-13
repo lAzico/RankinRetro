@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+    <Folder Include="Assets\" />
     <Folder Include="Views\Category\" />
   </ItemGroup>
 

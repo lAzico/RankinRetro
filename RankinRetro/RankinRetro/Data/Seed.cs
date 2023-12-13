@@ -158,7 +158,7 @@ namespace RunGroopWebApp.Data
                     {
                         Name = "Stylish Black Dress",
                         Description = "A classic black dress for various occasions.",
-                        Price = 49.99f,
+                        Price = new decimal(49.99),
                         BrandId = 1,
                         CategoryId = 1,
                         Size = Size.S,
@@ -170,7 +170,7 @@ namespace RunGroopWebApp.Data
                     {
                         Name = "Blue Denim Jeans",
                         Description = "High-quality denim jeans for a comfortable fit.",
-                        Price = 39.99f,
+                        Price = new decimal(39.99),
                         BrandId = 2,
                         CategoryId = 2,
                         Size = Size.M,
@@ -182,7 +182,7 @@ namespace RunGroopWebApp.Data
                     {
                         Name = "Red Silk Blouse",
                         Description = "Elegant red silk blouse for a luxurious feel.",
-                        Price = 59.99f,
+                        Price = new decimal(59.99),
                         BrandId = 3,
                         CategoryId = 1,
                         Size = Size.L,
@@ -193,6 +193,7 @@ namespace RunGroopWebApp.Data
                     });
                     context.SaveChanges();
                 }
+
             }
         }
 
