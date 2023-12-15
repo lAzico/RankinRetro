@@ -1,0 +1,54 @@
+﻿
+@model ShoppingCart
+
+
+
+@if (Model.Details != null && Model.Details.Count > 0)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Actions</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cartItem in Model.Details)
+            {
+                <tr>
+                    <td>@cartItem.Product.Name</td>
+                    <td>@cartItem.Quantity</td>
+                    <td>£@cartItem.Price</td>
+
+                    <td style="width: 43px">
+                        <form method="post" action="RemoveItem" style="width: 90px">
+                            <input type="hidden" name="productID" value="@cartItem.ProductId" />
+                            <button type="submit" class="btn bi-dash-circle-fill" style="color:red"></button>
+                        </form>
+                    </td>
+                    <td style="width: 43px">
+                        <form method="post" action="AddOneItem" style="width: 90px">
+                            <input type="hidden" name="productID" value="@cartItem.ProductId">
+                            <button type="submit" class="btn bi-plus-circle-fill" style="color:lawngreen"></button>
+                        </form>
+                    </td>
+                </tr>
+            }
+
+    </table>
+
+
+    <h2>Total price: £@ViewBag.TotalPrice</h2>
+
+    <button type="submit" class="btn btn-primary">Proceed to Checkout</button>
+}
+
+@if (Model.Details.Count == 0)
+{
+    <h2>Cart is empty</h2>
+}
+

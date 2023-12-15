@@ -6,12 +6,16 @@ namespace RankinRetro.Models
     public class ShoppingCart
     {
         [Key]
+
+        public int ShoppingCartId { get; set; }
         public int CartItemId { get; set; }
         [ForeignKey("CustomerId")]
-        public int CustomerId {  get; set; }
-        [ForeignKey("ProductId")]
-        public int ProductId { get; set; }
-        public int Quantity { get; set; }
+        public string CustomerId {  get; set; }
+
+        public ICollection<ShoppingCartDetail> Details { get; set; }
+        
+
+
 
     }
 }

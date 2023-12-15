@@ -3,6 +3,7 @@
 using RankinRetro.Data.Enum;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.SqlTypes;
 
 namespace RankinRetro.Models
 {
@@ -12,7 +13,7 @@ namespace RankinRetro.Models
         public int ProductId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public float Price { get; set; }
+        public decimal Price { get; set; }
         [ForeignKey("BrandId")]
         public int BrandId { get; set; }
         [ForeignKey("CategoryId")]

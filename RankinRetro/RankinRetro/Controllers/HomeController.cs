@@ -18,15 +18,22 @@ namespace RankinRetro.Controllers
 
         public async Task<IActionResult> Index()
         {
+            
+            
             var viewModel = new HomeViewModel
             {
                 Products = await _homeRepository.GetAllProducts(),
-                Categories = await _homeRepository.GetCategories()
+                Categories = await _homeRepository.GetCategories(),
+                Brands = await _homeRepository.GetBrands()
             };
+
+            
+
             return View(viewModel);
         }
 
-        public IActionResult Privacy()
+
+            public IActionResult Privacy()
         {
             return View();
         }

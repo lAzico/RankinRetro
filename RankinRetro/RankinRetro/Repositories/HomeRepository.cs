@@ -22,5 +22,10 @@ namespace RankinRetro.Repositories
         {
             return await _context.Categories.ToListAsync();
         }
+
+        public async Task<List<Brand>> GetBrands()
+        {
+            return await _context.Brands.ToListAsync();
+        }
     }
 }
