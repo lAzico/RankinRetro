@@ -14,5 +14,7 @@ namespace RankinRetro.Interfaces
         Task<ShoppingCart> GetCart(string userId);
         Task<bool> Checkout();
 
+        Task<int> AddOneItem(int productID);
+
     }
 }

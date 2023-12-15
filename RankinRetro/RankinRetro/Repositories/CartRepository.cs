@@ -150,5 +150,31 @@ namespace RankinRetro.Repositories
             }
             else { throw new Exception("Invalid user "); }
         }
+
+        public async Task<int> AddOneItem(int productID)
+        {
+            string userId = GetUserID();
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var cart = await GetCart(userId);
+                if (cart != null)
+                {
+                    var cartItem = _context.ShoppingCartDetail.FirstOrDefault(a => a.ShoppingCartId == cart.ShoppingCartId && a.ProductId == productID);
+                    if (cartItem == null)
+                    {
+                        throw new Exception("No items in cart");
+                    }
+                    else
+                    {
+                        cartItem.Quantity = cartItem.Quantity + 1;
+                        _context.SaveChanges();
+                    }
+                    _context.SaveChanges();
+                }
+                var cartItemCount = await GetCartItemCount(userId);
+                return cartItemCount;
+            }
+            else { throw new Exception("Invalid user "); }
+        }
     }
 }

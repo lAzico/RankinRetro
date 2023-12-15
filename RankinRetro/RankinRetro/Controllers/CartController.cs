@@ -24,12 +24,33 @@ namespace RankinRetro.Controllers
         public async Task<IActionResult> RemoveItem(int productId)
         {
             var cartCount = await _cartRepository.RemoveItem(productId);
-            return RedirectToAction("GetUserCart");
+            return RedirectToAction("Details");
         }
-        public async Task<IActionResult> GetUserCart()
+        public async Task<IActionResult> AddOneItem(int productId)
+        {
+            var cartCount = await _cartRepository.AddOneItem(productId);
+            return RedirectToAction("Details");
+        }
+
+
+        public async Task<IActionResult> Details()
         {
             var cart = await _cartRepository.GetUserCart();
-            ViewBag.TotalPrice = cart.Details.Sum(x => x.Price * x.Quantity);
+            if (cart != null)
+            {
+                ViewBag.TotalPrice = cart.Details.Sum(x => x.Price * x.Quantity);
+            }
+            else
+            {
+                cart = new ShoppingCart
+                {
+                    CartItemId = 0,
+                    CustomerId = null,
+                    ShoppingCartId = 0,
+                    Details = new List<ShoppingCartDetail>()
+
+                };
+            }
             return View(cart);
         }
 
