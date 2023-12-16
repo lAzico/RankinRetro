@@ -1,16 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using RankinRetro.Interfaces;
 using RankinRetro.Models;
+using RankinRetro.ViewModels;
 
 namespace RankinRetro.Controllers
 {
     public class CartController : Controller
     {
         private readonly ICartRepository _cartRepository;
+        private readonly SignInManager<Customer> _signInManager;
+        private readonly UserManager<Customer> _userManager;
 
-        public CartController(ICartRepository cartRepository)
+        public CartController(ICartRepository cartRepository, SignInManager<Customer> signInManager, UserManager<Customer> userManager)
         {
             _cartRepository = cartRepository;
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> AddItem(int productId, int qty = 1)
@@ -31,6 +37,66 @@ namespace RankinRetro.Controllers
             var cartCount = await _cartRepository.AddOneItem(productId);
             return RedirectToAction("Details");
         }
+
+        [HttpPost]
+        public decimal DiscountAmount(string discountCode)
+        {
+            var discount = _cartRepository.GetDiscountAmount(discountCode);
+            ViewBag.DiscountAmount = discount;
+            return discount;
+
+        }
+
+
+        public async Task<IActionResult> Checkout(string discountCode)
+        {
+           
+            bool isActive = false;
+            var cart = await _cartRepository.GetUserCart();
+
+
+            if (cart != null)
+            {
+                ViewBag.TotalPrice = cart.Details.Sum(x => x.Price * x.Quantity);
+                if (discountCode != null)
+                {
+                    var discountAmount = _cartRepository.GetDiscountAmount(discountCode);
+                    ViewBag.TotalPriceDiscounted = Math.Round(cart.Details.Sum(x => x.Price * x.Quantity) * discountAmount, 2);
+
+                }
+            }
+               
+                Customer signedInCustomer = await _signInManager.UserManager.GetUserAsync(User);
+                if (User.Identity.IsAuthenticated)
+                {
+                    var userID = _signInManager.UserManager.GetUserId(User);
+                    Customer customer = await _userManager.FindByIdAsync(userID);
+                var cartVM = new CartDisplayViewModel
+                    {
+                        Email = signedInCustomer.Email,
+                        Id = signedInCustomer.Id,
+                        FirstName = customer.FirstName,
+                        Surname = customer.Surname,
+                        Title = customer.Title,
+                        AddressFirstline = customer.AddressFirstline,
+                        AddressSecondline = customer.AddressSecondline,
+                        CityTown = customer.CityTown,
+                        AddressPostcode = customer.AddressPostcode,
+                        Gender = customer.Gender,
+                        Phone = customer.Phone,
+                        CartItems = cart.Details,
+                        
+                       
+                    };
+
+                    return View(cartVM);
+                
+                }
+                else { return RedirectToAction("Details"); }
+         
+        }
+
+
 
 
         public async Task<IActionResult> Details()

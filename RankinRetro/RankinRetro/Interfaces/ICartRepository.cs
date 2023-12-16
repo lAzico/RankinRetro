@@ -15,6 +15,6 @@ namespace RankinRetro.Interfaces
         Task<bool> Checkout();
 
         Task<int> AddOneItem(int productID);
-
+        decimal GetDiscountAmount(string discountCode);
     }
 }

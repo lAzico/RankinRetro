@@ -26,6 +26,14 @@ namespace RankinRetro.Repositories
             return userId;
         }
 
+        public  decimal GetDiscountAmount(string Discount)
+        {
+            var discounts =  _context.Discounts.ToListAsync();
+            var discountAmount = discounts.Result.FirstOrDefault(x => x.DiscountName == Discount).DiscountAmount;
+            return discountAmount;
+        }
+
+
         public async Task<int> AddItem(int productID, int qty)
         {
             var userId = GetUserID();
