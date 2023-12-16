@@ -22,14 +22,15 @@
               <span class="text-muted">£@cartItem.Product.Price</span>
             </li>
               }
-
+              @if(ViewBag.TotalPriceDiscounted != null){
             <li class="list-group-item d-flex justify-content-between bg-light">
               <div class="text-success">
-                <h6 class="my-0">Promo code</h6>
-                <small>EXAMPLECODE</small>
+                <h6 class="my-0"></h6>
+                <small>Discount code applied: @ViewBag.DiscountCode</small>
               </div>
-              <span class="text-success">-$5</span>
+              <span class="text-success">-£@ViewBag.AmountDiscounted</span>
             </li>
+              }
             <li class="list-group-item d-flex justify-content-between">
               <span>Total (GBP)</span>
                     @if (ViewBag.TotalPriceDiscounted != null)
@@ -44,7 +45,6 @@
 
             </li>
           </ul>
-
           <form method="post" action="Checkout">
             <div class="input-group">
                     <input type="text" class="form-control" placeholder="Promo code" name="discountCode">
@@ -54,9 +54,9 @@
             </div>
           </form>
         </div>
-        <div class="col-md-8 order-md-1">
+        
+    <div class="col-md-8 order-md-1" id="billing-address-form">
           <h4 class="mb-3">Billing address</h4>
-          <form class="needs-validation" novalidate="">
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="firstName">First name</label>
@@ -105,17 +105,74 @@
             </div>
             <hr class="mb-4">
             <div class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="same-address">
+              <input type="checkbox" class="custom-control-input" id="same-address" onchange="handleSameAddressChange()">
               <label class="custom-control-label" for="same-address">Shipping address is the same as my billing address</label>
             </div>
             <div class="custom-control custom-checkbox">
               <input type="checkbox" class="custom-control-input" id="save-info">
               <label class="custom-control-label" for="save-info">Save this information for next time</label>
             </div>
-            <hr class="mb-4">
 
-            <h4 class="mb-3">Payment</h4>
+        
 
+
+            <div class="ShippingAddressForm">
+                <hr class="mb-4">
+        <div class="col-md-8 order-md-1" id="shipping-address-form">
+                    <h4 class="mb-3">Shipping Address</h4>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="firstName">First name</label>
+                                <input type="text" class="form-control" id="firstName" value="@Model.FirstName" required="">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="lastName">Last name</label>
+                                <input type="text" class="form-control" id="lastName" value="@Model.Surname" required="">
+                            <div class="invalid-feedback">
+                                    Valid last name is required.
+                            </div>
+                        </div>
+                     
+
+
+                        <div class="mb-3">
+                            <label for="email">Email <span class="text-muted">(Optional)</span></label>
+                            <input type="email" class="form-control" id="email" value="@Model.Email">
+                            <div class="invalid-feedback">
+                                Please enter a valid email address for shipping updates.
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address">Address</label>
+                            <input type="text" class="form-control" id="address" value="@Model.AddressFirstline" required="">
+                            <div class="invalid-feedback">
+                                Please enter your shipping address.
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>
+                            <input type="text" class="form-control" id="address2" value="@Model.AddressSecondline" />
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-5 mb-3">
+                                <label for="City/Town">City/Town</label>
+                                <input type="text" class="form-control" id="city/town" value="@Model.CityTown" />
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="Postcode">Postcode</label>
+                                <input type="text" class="form-control" id="postcode" value="@Model.AddressPostcode" required="">
+                            </div>
+                        </div>
+                        </div>
+                </div>
+            </div>
+                        <hr class="mb-4">
+                        
+
+                    <h4 class="mb-3">Payment</h4>
             <div class="d-block my-3">
               <div class="custom-control custom-radio">
                 <input id="credit" name="paymentMethod" type="radio" class="custom-control-input" checked="" required="">
@@ -160,13 +217,14 @@
               </div>
             </div>
             <hr class="mb-4">
+            <form method="post" action="CheckoutForm">
             <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
-          </form>
+            </form>
         </div>
       </div>
 
       <footer class="my-5 pt-5 text-muted text-center text-small">
-        <p class="mb-1">© 2017-2018 Company Name</p>
+        <p class="mb-1">RankinRetro</p>
         <ul class="list-inline">
           <li class="list-inline-item"><a href="#">Privacy</a></li>
           <li class="list-inline-item"><a href="#">Terms</a></li>
@@ -174,3 +232,34 @@
         </ul>
       </footer>
     </div>
+
+<script>
+    function handleSameAddressChange() {
+        if (document.getElementById('same-address').checked) {
+            document.getElementById('shipping-address-form').style.display = 'none';
+            copyBillingAddressToShippingAddress();
+        } else {
+            document.getElementById('shipping-address-form').style.display = 'block';
+            clearShippingAddressFields();
+        }
+    }
+
+    function copyBillingAddressToShippingAddress() {
+        const billingAddress = document.getElementById('billing-address-form');
+        const shippingAddress = document.getElementById('shipping-address-form');
+
+        for (const field of billingAddress.querySelectorAll('input, textarea')) {
+            const shippingField = shippingAddress.querySelector(`[name="${field.name}"]`);
+            if (shippingField) {
+                shippingField.value = field.value;
+            }
+        }
+    }
+
+    function clearShippingAddressFields() {
+        const shippingAddress = document.getElementById('shipping-address-form');
+        for (const field of shippingAddress.querySelectorAll('input, textarea')) {
+            field.value = '';
+        }
+    }
+</script>

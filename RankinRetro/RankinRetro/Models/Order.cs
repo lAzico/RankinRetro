@@ -9,9 +9,9 @@ namespace RankinRetro.Models
         [Key]
         public int OrderId { get; set; }
         [ForeignKey("CustomerId")]
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
         public DateTime OrderDate {  get; set; }
         public Status Status { get; set; }
-        public float Total { get; set; }
+        public decimal Total { get; set; }
     }
 }

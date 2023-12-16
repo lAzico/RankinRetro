@@ -12,7 +12,7 @@ namespace RankinRetro.Interfaces
 
         Task<int> GetCartItemCount(string userId = "");
         Task<ShoppingCart> GetCart(string userId);
-        Task<bool> Checkout();
+        Task<bool> Checkout(decimal discountAmount);
 
         Task<int> AddOneItem(int productID);
         decimal GetDiscountAmount(string discountCode);

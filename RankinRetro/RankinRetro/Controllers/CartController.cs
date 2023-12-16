@@ -42,7 +42,6 @@ namespace RankinRetro.Controllers
         public decimal DiscountAmount(string discountCode)
         {
             var discount = _cartRepository.GetDiscountAmount(discountCode);
-            ViewBag.DiscountAmount = discount;
             return discount;
 
         }
@@ -62,7 +61,9 @@ namespace RankinRetro.Controllers
                 {
                     var discountAmount = _cartRepository.GetDiscountAmount(discountCode);
                     ViewBag.TotalPriceDiscounted = Math.Round(cart.Details.Sum(x => x.Price * x.Quantity) * discountAmount, 2);
-
+                    ViewBag.AmountDiscounted = ViewBag.TotalPrice - ViewBag.TotalPriceDiscounted;
+                    ViewBag.DiscountCode = discountCode;
+                    
                 }
             }
                
@@ -82,11 +83,8 @@ namespace RankinRetro.Controllers
                         AddressSecondline = customer.AddressSecondline,
                         CityTown = customer.CityTown,
                         AddressPostcode = customer.AddressPostcode,
-                        Gender = customer.Gender,
-                        Phone = customer.Phone,
                         CartItems = cart.Details,
-                        
-                       
+
                     };
 
                     return View(cartVM);
@@ -95,8 +93,6 @@ namespace RankinRetro.Controllers
                 else { return RedirectToAction("Details"); }
          
         }
-
-
 
 
         public async Task<IActionResult> Details()
@@ -124,6 +120,17 @@ namespace RankinRetro.Controllers
         {
             int cartItem = await _cartRepository.GetCartItemCount();
             return Ok(cartItem);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CheckoutForm(decimal discountAmount)
+        {
+            bool checkedOut = await _cartRepository.Checkout(discountAmount);
+            if (!checkedOut)
+            {
+                throw new Exception("Server did not compute request");
+            }
+            return RedirectToAction("Index", "Home");
         }
 
 
