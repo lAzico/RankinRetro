@@ -117,8 +117,9 @@
 
 
             <div class="ShippingAddressForm">
-                <hr class="mb-4">
+                
         <div class="col-md-8 order-md-1" id="shipping-address-form">
+                    <hr class="mb-4">
                     <h4 class="mb-3">Shipping Address</h4>
                         <div class="row">
                             <div class="col-md-6 mb-3">
@@ -168,8 +169,9 @@
                         </div>
                         </div>
                 </div>
+                <hr class="mb-4">
             </div>
-                        <hr class="mb-4">
+                        
                         
 
                     <h4 class="mb-3">Payment</h4>
@@ -217,7 +219,8 @@
               </div>
             </div>
             <hr class="mb-4">
-            <form method="post" action="CheckoutForm">
+            <form method="post" action="CheckoutForm" >
+                <input type="hidden" class="form-control" name="discountAmount" value="@ViewBag.DiscountAmount" />
             <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
             </form>
         </div>

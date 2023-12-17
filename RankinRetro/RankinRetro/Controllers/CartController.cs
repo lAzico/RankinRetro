@@ -60,6 +60,7 @@ namespace RankinRetro.Controllers
                 if (discountCode != null)
                 {
                     var discountAmount = _cartRepository.GetDiscountAmount(discountCode);
+                    ViewBag.DiscountAmount = discountAmount;
                     ViewBag.TotalPriceDiscounted = Math.Round(cart.Details.Sum(x => x.Price * x.Quantity) * discountAmount, 2);
                     ViewBag.AmountDiscounted = ViewBag.TotalPrice - ViewBag.TotalPriceDiscounted;
                     ViewBag.DiscountCode = discountCode;
@@ -125,6 +126,7 @@ namespace RankinRetro.Controllers
         [HttpPost]
         public async Task<IActionResult> CheckoutForm(decimal discountAmount)
         {
+           
             bool checkedOut = await _cartRepository.Checkout(discountAmount);
             if (!checkedOut)
             {

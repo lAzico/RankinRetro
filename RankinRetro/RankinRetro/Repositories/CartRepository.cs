@@ -110,37 +110,53 @@ namespace RankinRetro.Repositories
             {
                 throw new Exception("No items in cart");
             }
-            var order = new Order
+            if (discountAmount > 0)
             {
-                CustomerId = userID,
-                OrderDate = DateTime.UtcNow,
-                Status = Data.Enum.Status.Pending
-            };
-            _context.Orders.Add(order);
-           
-            foreach (var item in cartDetails)
+                var order = new Order
+                {
+                    CustomerId = userID,
+                    OrderDate = DateTime.UtcNow,
+                    Status = Data.Enum.Status.Pending,
+                    Total = Math.Round(cartDetails.Sum(x => x.Price * x.Quantity) * discountAmount, 2)
+                };
+                _context.Orders.Add(order);
+                _context.SaveChanges();
+                foreach (var item in cartDetails)
+                {
+                        var orderDetail = new OrderItem
+                        {
+                            ProductId = item.ProductId,
+                            OrderId = order.OrderId,
+                            Quantity = item.Quantity,
+                            Price = item.Price * discountAmount
+                        };
+                        _context.OrderItems.Add(orderDetail);
+                    }
+
+            }
+
+            else
             {
-                if (discountAmount != null)
+                var order = new Order
                 {
-                    var orderDetail = new OrderItem
-                    {
-                        ProductId = item.ProductId,
-                        OrderId = order.OrderId,
-                        Quantity = item.Quantity,
-                        Price = item.Price * discountAmount
-                    };
-                    _context.OrderItems.Add(orderDetail);
-                }
-                else
+                    CustomerId = userID,
+                    OrderDate = DateTime.UtcNow,
+                    Status = Data.Enum.Status.Pending,
+                    Total = Math.Round(cartDetails.Sum(x => x.Price * x.Quantity), 2)
+                };
+                _context.Orders.Add(order);
+                _context.SaveChanges();
+                foreach (var item in cartDetails)
                 {
-                    var orderDetail = new OrderItem
-                    {
-                        ProductId = item.ProductId,
-                        OrderId = order.OrderId,
-                        Quantity = item.Quantity,
-                        Price = item.Price
-                    };
-                    _context.OrderItems.Add(orderDetail);
+                        var orderDetail = new OrderItem
+                        {
+                            ProductId = item.ProductId,
+                            OrderId = order.OrderId,
+                            Quantity = item.Quantity,
+                            Price = item.Price
+                        };
+                        _context.OrderItems.Add(orderDetail);          
+
                 }
                 
             }
