@@ -349,15 +349,16 @@ namespace RankinRetro.Migrations
 
             modelBuilder.Entity("RankinRetro.Models.Order", b =>
                 {
-                    b.Property<int>("OrderId")
+                    b.Property<Guid>("OrderId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CustomerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("DiscountAmount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
@@ -381,8 +382,15 @@ namespace RankinRetro.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderItemId"));
 
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
+                    b.Property<decimal>("DiscountAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -393,7 +401,13 @@ namespace RankinRetro.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<string>("URL")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("OrderItemId");
+
+                    b.HasIndex("OrderId");
 
                     b.ToTable("OrderItems");
                 });
@@ -570,6 +584,15 @@ namespace RankinRetro.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("RankinRetro.Models.OrderItem", b =>
+                {
+                    b.HasOne("RankinRetro.Models.Order", null)
+                        .WithMany("Details")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("RankinRetro.Models.ShoppingCartDetail", b =>
                 {
                     b.HasOne("RankinRetro.Models.Product", "Product")
@@ -587,6 +610,11 @@ namespace RankinRetro.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("ShoppingCart");
+                });
+
+            modelBuilder.Entity("RankinRetro.Models.Order", b =>
+                {
+                    b.Navigation("Details");
                 });
 
             modelBuilder.Entity("RankinRetro.Models.ShoppingCart", b =>

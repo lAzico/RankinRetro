@@ -12,8 +12,8 @@ using RankinRetro.Data;
 namespace RankinRetro.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231213160635_PriceDecimalFix")]
-    partial class PriceDecimalFix
+    [Migration("20231218114812_AddingNamesToOrders")]
+    partial class AddingNamesToOrders
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -338,8 +338,8 @@ namespace RankinRetro.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("DiscountAmount")
-                        .HasColumnType("real");
+                    b.Property<decimal>("DiscountAmount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("DiscountName")
                         .IsRequired()
@@ -352,14 +352,16 @@ namespace RankinRetro.Migrations
 
             modelBuilder.Entity("RankinRetro.Models.Order", b =>
                 {
-                    b.Property<int>("OrderId")
+                    b.Property<Guid>("OrderId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
+                    b.Property<decimal>("DiscountAmount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
@@ -367,8 +369,8 @@ namespace RankinRetro.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<float>("Total")
-                        .HasColumnType("real");
+                    b.Property<decimal>("Total")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("OrderId");
 
@@ -383,8 +385,18 @@ namespace RankinRetro.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderItemId"));
 
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
+                    b.Property<decimal>("DiscountAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -393,6 +405,8 @@ namespace RankinRetro.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("OrderItemId");
+
+                    b.HasIndex("OrderId");
 
                     b.ToTable("OrderItems");
                 });
@@ -569,6 +583,15 @@ namespace RankinRetro.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("RankinRetro.Models.OrderItem", b =>
+                {
+                    b.HasOne("RankinRetro.Models.Order", null)
+                        .WithMany("Details")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("RankinRetro.Models.ShoppingCartDetail", b =>
                 {
                     b.HasOne("RankinRetro.Models.Product", "Product")
@@ -586,6 +609,11 @@ namespace RankinRetro.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("ShoppingCart");
+                });
+
+            modelBuilder.Entity("RankinRetro.Models.Order", b =>
+                {
+                    b.Navigation("Details");
                 });
 
             modelBuilder.Entity("RankinRetro.Models.ShoppingCart", b =>

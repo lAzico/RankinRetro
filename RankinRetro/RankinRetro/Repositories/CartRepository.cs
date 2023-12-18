@@ -114,21 +114,28 @@ namespace RankinRetro.Repositories
             {
                 var order = new Order
                 {
+                    OrderId = Guid.NewGuid(),
                     CustomerId = userID,
                     OrderDate = DateTime.UtcNow,
                     Status = Data.Enum.Status.Pending,
-                    Total = Math.Round(cartDetails.Sum(x => x.Price * x.Quantity) * discountAmount, 2)
+                    Total = Math.Round(cartDetails.Sum(x => x.Price * x.Quantity) * discountAmount, 2),
+                    DiscountAmount = discountAmount,
                 };
                 _context.Orders.Add(order);
                 _context.SaveChanges();
                 foreach (var item in cartDetails)
                 {
-                        var orderDetail = new OrderItem
+                    var productName = _context.Products.FirstOrDefaultAsync(x => x.ProductId == item.ProductId).Result.Name;
+                    var productImageURL = _context.Products.FirstOrDefaultAsync(x => x.ProductId == item.ProductId).Result.ImageURL;
+                    var orderDetail = new OrderItem
                         {
+                            URL = productImageURL,
+                            Name = productName,
                             ProductId = item.ProductId,
                             OrderId = order.OrderId,
                             Quantity = item.Quantity,
-                            Price = item.Price * discountAmount
+                            Price = item.Price * discountAmount,
+                            DiscountAmount = discountAmount
                         };
                         _context.OrderItems.Add(orderDetail);
                     }
@@ -148,8 +155,12 @@ namespace RankinRetro.Repositories
                 _context.SaveChanges();
                 foreach (var item in cartDetails)
                 {
-                        var orderDetail = new OrderItem
+                    var productName = _context.Products.FirstOrDefaultAsync(x => x.ProductId == item.ProductId).Result.Name;
+                    var productImageURL = _context.Products.FirstOrDefaultAsync(x => x.ProductId == item.ProductId).Result.ImageURL;
+                    var orderDetail = new OrderItem
                         {
+                            URL = productImageURL,
+                            Name = productName,
                             ProductId = item.ProductId,
                             OrderId = order.OrderId,
                             Quantity = item.Quantity,
