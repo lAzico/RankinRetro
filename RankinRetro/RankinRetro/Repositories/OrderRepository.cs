@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using RankinRetro.Data;
 using RankinRetro.Interfaces;
 using RankinRetro.Models;
@@ -33,10 +35,44 @@ namespace RankinRetro.Repositories
         }
 
 
-            public async Task<Order> RemoveItem(int productId)
+            public async Task<OrderItem> RemoveItem(Guid orderId, int productId)
         {
-            throw new NotImplementedException();
+
+            var orderItems = await GetOrderItemsAsync(orderId);
+            var product = orderItems.Where(x => x.ProductId == productId).FirstOrDefault();
+
+            if (product != null)
+            {
+                _context.Remove(product);
+                _context.SaveChanges();
+            }
+            return product;
         }
+
+
+        public async Task<Order> RemoveOrder(Guid orderId)
+        {
+            var userID = GetUserID();
+            var order = GetUserOrdersAsync().Result.FirstOrDefault(x => x.OrderId == orderId);
+
+
+            if (userID == order.CustomerId)
+            {
+                //Only remove order if the status is pending and
+                if (order.Status == Data.Enum.Status.Pending)
+                {
+                    _context.Remove(order);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    throw new Exception("Cannot cancel successful order");
+                }
+            }
+            return order;
+        }
+
+
 
         public string GetUserID()
         {

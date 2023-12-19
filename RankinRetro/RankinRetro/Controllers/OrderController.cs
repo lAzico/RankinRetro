@@ -9,14 +9,11 @@ namespace RankinRetro.Controllers
     public class OrderController : Controller
     {
         private readonly IOrderRepository _orderRepository;
-        private readonly HttpContextAccessor _httpContextAccessor;
-        private readonly UserManager<Customer> _userManager;
 
-        public OrderController(IOrderRepository orderRepository, HttpContextAccessor httpContextAccessor, UserManager<Customer> userManager)
+        public OrderController(IOrderRepository orderRepository)
         {
             _orderRepository = orderRepository;
-            _httpContextAccessor = httpContextAccessor;
-            _userManager = userManager;
+
         }
 
 
@@ -27,10 +24,9 @@ namespace RankinRetro.Controllers
             foreach (var order in orders)
             {
                 var orderItemTask = _orderRepository.GetOrderItemsAsync(order.OrderId).Result;
-                foreach (var item in orderItemTask)
+                foreach(var item in orderItemTask)
                 {
-                    var orderItem = orderItemTask.FirstOrDefault();
-                    ordersItems.Add(orderItem);
+                    ordersItems.Add(item);
                 }
                 
             }
@@ -43,6 +39,47 @@ namespace RankinRetro.Controllers
 
             return View(orderVM);
             
+        }
+
+        [HttpPost]
+        public IActionResult RemoveOrder(Guid orderId) 
+        {
+            if (orderId != null)
+            {
+                _orderRepository.RemoveOrder(orderId);
+
+            }
+            else
+            {
+                throw new Exception("Order doesn't exist");
+            }
+
+            return RedirectToAction("Details");
+        
+        }
+
+
+        [HttpPost]
+        public IActionResult RemoveItem(Guid orderId, int productId)
+        {
+            if (orderId != null)
+            {
+                if (productId != 0)
+                {
+                    _orderRepository.RemoveItem(orderId, productId);
+                }
+                else
+                {
+                    throw new Exception($"Unable to remove item {productId}");
+                }
+            }
+            else
+            {
+                throw new Exception("Order doesn't exist");
+            }
+
+            return RedirectToAction("Details");
+
         }
     }
 }

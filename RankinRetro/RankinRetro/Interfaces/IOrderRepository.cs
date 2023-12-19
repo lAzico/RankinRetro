@@ -7,7 +7,9 @@ namespace RankinRetro.Interfaces
         Task<List<Order>> GetUserOrdersAsync();
 
         Task<List<OrderItem>> GetOrderItemsAsync(Guid orderId);
-        Task<Order> RemoveItem(int productId);
+        Task<OrderItem> RemoveItem(Guid orderId, int productId);
+        Task<Order> RemoveOrder(Guid order);
+
         string GetUserID();
 
     }
