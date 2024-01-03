@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using RankinRetro.Data;
 using RankinRetro.Interfaces;
+using RankinRetro.Migrations;
 using RankinRetro.Models;
 using RankinRetro.ViewModels;
 
@@ -21,7 +23,7 @@ namespace RankinRetro.Controllers
 
         public async Task<IActionResult> AddItem(int productId, int qty = 1)
         {
-            
+
             var cartCount = await _cartRepository.AddItem(productId, qty);
 
             return RedirectToAction("Index", "Home");
@@ -49,7 +51,7 @@ namespace RankinRetro.Controllers
 
         public async Task<IActionResult> Checkout(string discountCode)
         {
-           
+
             bool isActive = false;
             var cart = await _cartRepository.GetUserCart();
 
@@ -64,35 +66,86 @@ namespace RankinRetro.Controllers
                     ViewBag.TotalPriceDiscounted = Math.Round(cart.Details.Sum(x => x.Price * x.Quantity) * discountAmount, 2);
                     ViewBag.AmountDiscounted = ViewBag.TotalPrice - ViewBag.TotalPriceDiscounted;
                     ViewBag.DiscountCode = discountCode;
-                    
+
                 }
             }
-               
-                Customer signedInCustomer = await _signInManager.UserManager.GetUserAsync(User);
-                if (User.Identity.IsAuthenticated)
+
+            Customer signedInCustomer = await _signInManager.UserManager.GetUserAsync(User);
+            if (User.Identity.IsAuthenticated)
+            {
+                var userID = _signInManager.UserManager.GetUserId(User);
+                Customer customer = await _userManager.FindByIdAsync(userID);
+                var CartVM = new CartDisplayViewModel
                 {
-                    var userID = _signInManager.UserManager.GetUserId(User);
-                    Customer customer = await _userManager.FindByIdAsync(userID);
-                var cartVM = new CartDisplayViewModel
-                    {
-                        Email = signedInCustomer.Email,
-                        Id = signedInCustomer.Id,
-                        FirstName = customer.FirstName,
-                        Surname = customer.Surname,
-                        Title = customer.Title,
-                        AddressFirstline = customer.AddressFirstline,
-                        AddressSecondline = customer.AddressSecondline,
-                        CityTown = customer.CityTown,
-                        AddressPostcode = customer.AddressPostcode,
-                        CartItems = cart.Details,
+                    Email = signedInCustomer.Email,
+                    FirstName = customer.FirstName,
+                    Surname = customer.Surname,
+                    Title = customer.Title,
+                    AddressFirstline = customer.AddressFirstline,
+                    AddressSecondline = customer.AddressSecondline,
+                    CityTown = customer.CityTown,
+                    AddressPostcode = customer.AddressPostcode,
+                    CartItems = cart.Details,
+                };
 
-                    };
+                return View(CartVM);
 
-                    return View(cartVM);
-                
-                }
-                else { return RedirectToAction("Details"); }
-         
+            }
+            else { return RedirectToAction("Details"); }
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Checkout(decimal ddiscountAmount, CartDisplayViewModel CartVM)
+        {
+            var cart = await _cartRepository.GetUserCart();
+            var CustomerId = _userManager.GetUserId(User);
+
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Checkout", "Cart");
+            }
+            else
+            {
+                var checkedOut = await _cartRepository.Checkout(ddiscountAmount);
+
+
+                var BillingAddress = new OrderBillingAddress
+                {
+                    FirstName = CartVM.FirstName,
+                    Surname = CartVM.Surname,
+                    AddressFirstline = CartVM.AddressFirstline,
+                    AddressSecondline = CartVM.AddressSecondline,
+                    AddressPostcode = CartVM.AddressPostcode,
+                    CityTown = CartVM.CityTown,
+                    Title = CartVM.Title,
+                    CustomerId = CustomerId,
+                    OrderId = checkedOut.OrderId,
+                    Email = CartVM.Email,
+                };
+
+                var ShippingAddress = new OrderAddress
+                {
+                    ShippingFirstName = CartVM.ShippingFirstName,
+                    ShippingSurname = CartVM.ShippingSurname,
+                    ShippingAddressFirstline = CartVM.ShippingAddressFirstline,
+                    ShippingAddressSecondline = CartVM.ShippingAddressSecondline,
+                    ShippingAddressPostcode = CartVM.ShippingAddressPostcode,
+                    ShippingCityTown = CartVM.ShippingCityTown,
+                    ShippingTitle = CartVM.ShippingTitle,
+                    CustomerId = CustomerId,
+                    OrderId = checkedOut.OrderId,
+                    Email = CartVM.ShippingEmail
+                };
+
+                _cartRepository.AddBillingAddress(BillingAddress);
+                _cartRepository.AddOrderAddress(ShippingAddress);
+
+
+                return RedirectToAction("Details", "Order");
+            }
+
+
         }
 
 
@@ -123,18 +176,8 @@ namespace RankinRetro.Controllers
             return Ok(cartItem);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CheckoutForm(decimal discountAmount)
-        {
-           
-            bool checkedOut = await _cartRepository.Checkout(discountAmount);
-            if (!checkedOut)
-            {
-                throw new Exception("Server did not compute request");
-            }
-            return RedirectToAction("Index", "Home");
-        }
-
 
     }
 }
+
+    

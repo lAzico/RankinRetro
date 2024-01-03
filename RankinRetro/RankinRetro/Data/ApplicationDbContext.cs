@@ -22,6 +22,8 @@ namespace RankinRetro.Data
         public DbSet<Discount> Discounts { get; set; }
         public DbSet<AzureStorageConfig> Configs { get; set; }
         public DbSet<ShoppingCartDetail> ShoppingCartDetail { get; set;}
+        public DbSet<OrderAddress> OrderAddresses { get; set; }
+        public DbSet<OrderBillingAddress> OrderBillingAddresses { get; set; }
 
     }
 }

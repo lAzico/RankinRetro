@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using RankinRetro.Data;
 using RankinRetro.Interfaces;
+using RankinRetro.Migrations;
 using RankinRetro.Models;
 
 namespace RankinRetro.Repositories
@@ -87,7 +88,7 @@ namespace RankinRetro.Repositories
             return cartItemCount;
         }
 
-        public async Task<bool> Checkout(decimal discountAmount)
+        public async Task<Order> Checkout(decimal discountAmount)
         {
             using var transaction = _context.Database.BeginTransaction();
 
@@ -100,13 +101,13 @@ namespace RankinRetro.Repositories
             }
 
             var cart = await GetCart(userID);
-            if ( cart == null) 
+            if (cart == null)
             {
                 throw new Exception("Cart is invalid");
             }
 
             var cartDetails = _context.ShoppingCartDetail.Where(a => a.ShoppingCartId == cart.ShoppingCartId).ToList();
-            if (cartDetails.Count == 0 )
+            if (cartDetails.Count == 0)
             {
                 throw new Exception("No items in cart");
             }
@@ -121,6 +122,15 @@ namespace RankinRetro.Repositories
                     Total = Math.Round(cartDetails.Sum(x => x.Price * x.Quantity) * discountAmount, 2),
                     DiscountAmount = discountAmount,
                 };
+
+                var Address = new OrderAddress
+                {
+                    OrderId = order.OrderId,
+                    CustomerId = userID,
+                    
+
+                };
+
                 _context.Orders.Add(order);
                 _context.SaveChanges();
                 foreach (var item in cartDetails)
@@ -128,18 +138,22 @@ namespace RankinRetro.Repositories
                     var productName = _context.Products.FirstOrDefaultAsync(x => x.ProductId == item.ProductId).Result.Name;
                     var productImageURL = _context.Products.FirstOrDefaultAsync(x => x.ProductId == item.ProductId).Result.ImageURL;
                     var orderDetail = new OrderItem
-                        {
-                            URL = productImageURL,
-                            Name = productName,
-                            ProductId = item.ProductId,
-                            OrderId = order.OrderId,
-                            Quantity = item.Quantity,
-                            Price = item.Price * discountAmount,
-                            DiscountAmount = discountAmount
-                        };
-                        _context.OrderItems.Add(orderDetail);
-                    }
+                    {
+                        URL = productImageURL,
+                        Name = productName,
+                        ProductId = item.ProductId,
+                        OrderId = order.OrderId,
+                        Quantity = item.Quantity,
+                        Price = item.Price * discountAmount,
+                        DiscountAmount = discountAmount
+                    };
+                    _context.OrderItems.Add(orderDetail);
+                }
+                _context.RemoveRange(cartDetails);
+                _context.SaveChanges();
 
+                transaction.Commit();
+                return order;
             }
 
             else
@@ -158,26 +172,22 @@ namespace RankinRetro.Repositories
                     var productName = _context.Products.FirstOrDefaultAsync(x => x.ProductId == item.ProductId).Result.Name;
                     var productImageURL = _context.Products.FirstOrDefaultAsync(x => x.ProductId == item.ProductId).Result.ImageURL;
                     var orderDetail = new OrderItem
-                        {
-                            URL = productImageURL,
-                            Name = productName,
-                            ProductId = item.ProductId,
-                            OrderId = order.OrderId,
-                            Quantity = item.Quantity,
-                            Price = item.Price
-                        };
-                        _context.OrderItems.Add(orderDetail);          
-
+                    {
+                        URL = productImageURL,
+                        Name = productName,
+                        ProductId = item.ProductId,
+                        OrderId = order.OrderId,
+                        Quantity = item.Quantity,
+                        Price = item.Price
+                    };
+                    _context.OrderItems.Add(orderDetail);
                 }
-                
+                _context.RemoveRange(cartDetails);
+                _context.SaveChanges();
+
+                transaction.Commit();
+                return order;
             }
-            
-            _context.RemoveRange(cartDetails);
-            _context.SaveChanges();
-
-            transaction.Commit();
-            return true;
-
 
         }
 
@@ -273,6 +283,25 @@ namespace RankinRetro.Repositories
                 return cartItemCount;
             }
             else { throw new Exception("Invalid user "); }
+        }
+
+        public bool AddBillingAddress(OrderBillingAddress billingAddress)
+        {
+            _context.OrderBillingAddresses.Add(billingAddress);
+            return Save();
+        }
+
+        public bool AddOrderAddress(OrderAddress orderAddress)
+        {
+            _context.OrderAddresses.Add(orderAddress);
+            return Save();
+        }
+
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
         }
     }
 }

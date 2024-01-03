@@ -7,7 +7,6 @@ namespace RankinRetro.ViewModels
     public class CartDisplayViewModel
     {
 
-        public string Id { get; set; }
 
         [Required(ErrorMessage = "Email address is required")]
         [Display(Name = "Email Address")]
@@ -45,6 +44,10 @@ namespace RankinRetro.ViewModels
         [Required]
         [Display(Name = "Title")]
         public UserTitle ShippingTitle { get; set; }
+
+        [Required(ErrorMessage = "Email address is required")]
+        [Display(Name = "Email Address")]
+        public string ShippingEmail { get; set; }
         [Required]
         [Display(Name = "Address first line")]
         public string ShippingAddressFirstline { get; set; }
@@ -62,7 +65,6 @@ namespace RankinRetro.ViewModels
         //For recommendations of products
         public ICollection<ShoppingCartDetail> CartItems { get; set; }
 
-        public decimal DiscountAmount { get; set; }
 
     }
 }
