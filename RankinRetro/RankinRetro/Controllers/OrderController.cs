@@ -18,9 +18,12 @@ namespace RankinRetro.Controllers
 
 
         public IActionResult Details()
-        { 
+        {
+            var customerId = _orderRepository.GetUserID();
             var orders = _orderRepository.GetUserOrdersAsync().Result;
             List<OrderItem> ordersItems = new List<OrderItem>();
+            var orderAddresses = _orderRepository.GetOrderAddressAsync(customerId).Result;
+            var billingAddresses = _orderRepository.GetBillingAddressAsync(customerId).Result;
             foreach (var order in orders)
             {
                 var orderItemTask = _orderRepository.GetOrderItemsAsync(order.OrderId).Result;
@@ -28,13 +31,14 @@ namespace RankinRetro.Controllers
                 {
                     ordersItems.Add(item);
                 }
-                
             }
             
             OrderDisplayViewModel orderVM = new OrderDisplayViewModel()
             {
                 Orders = orders,
-                OrderItems = ordersItems
+                OrderItems = ordersItems,
+                Address = orderAddresses,
+                BillingAddress = billingAddresses
             };
 
             return View(orderVM);

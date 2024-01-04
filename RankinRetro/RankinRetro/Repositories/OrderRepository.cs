@@ -81,5 +81,16 @@ namespace RankinRetro.Repositories
             return userId;
         }
 
+        public  Task<List<OrderAddress>> GetOrderAddressAsync(string customerId)
+        {
+            var OrderAddresses = _context.OrderAddresses.Where(x => x.CustomerId ==customerId).ToListAsync();
+            return OrderAddresses;
+        }
+
+        public  Task<List<OrderBillingAddress>> GetBillingAddressAsync(string customerId)
+        {
+            var BillingAddresses =  _context.OrderBillingAddresses.Where(x => x.CustomerId == customerId).ToListAsync();
+            return BillingAddresses;
+        }
     }
 }

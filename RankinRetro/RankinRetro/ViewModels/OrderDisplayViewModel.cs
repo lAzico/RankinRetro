@@ -6,5 +6,7 @@ namespace RankinRetro.ViewModels
     {
         public List<Order> Orders { get; set; }
         public List<OrderItem> OrderItems { get; set; }
+        public List<OrderAddress> Address { get; set; }
+        public List<OrderBillingAddress> BillingAddress { get; set; }
     }
 }
