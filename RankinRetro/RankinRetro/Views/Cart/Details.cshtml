@@ -22,7 +22,7 @@
                 <tr>
                     <td>@cartItem.Product.Name</td>
                     <td>@cartItem.Quantity</td>
-                    <td>£@cartItem.Price</td>
+                    <td>£@(@cartItem.Price * cartItem.Quantity)</td>
 
                     <td style="width: 43px">
                         <form method="post" action="RemoveItem" style="width: 90px">
@@ -44,7 +44,8 @@
 
     <h2>Total price: £@ViewBag.TotalPrice</h2>
 
-    <button type="submit" class="btn btn-primary">Proceed to Checkout</button>
+
+    <a asp-controller="Cart" asp-action="Checkout" class="btn btn-primary">Proceed to Checkout</a>
 }
 
 @if (Model.Details.Count == 0)

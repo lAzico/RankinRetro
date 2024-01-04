@@ -125,27 +125,27 @@ namespace RunGroopWebApp.Data
                     {
                     new Discount()
                     {
-                        DiscountName = "Half Price",
+                        DiscountName = "HALF",
                         Description = "Enjoy a 50% discount on selected items!",
-                        DiscountAmount = 0.50f
+                        DiscountAmount = new decimal(0.50)
                     },
                     new Discount()
                     {
-                        DiscountName = "Flash Sale",
+                        DiscountName = "FLASH",
                         Description = "Limited-time offer: Save 30% on all products in our collection!",
-                        DiscountAmount = 0.30f
+                        DiscountAmount = new decimal(0.30)
                     },
                     new Discount()
                     {
-                        DiscountName = "Summer Clearance",
+                        DiscountName = "SMMR",
                         Description = "Get ready for summer with 25% off on swimwear and beach accessories.",
-                        DiscountAmount = 0.25f
+                        DiscountAmount = new decimal(0.25)
                     },
                     new Discount()
                     {
-                        DiscountName = "Buy One, Get One Free",
+                        DiscountName = "BOGOF",
                         Description = "Buy one item and get the second one for free. Don't miss this amazing deal!",
-                        DiscountAmount = 0.00f
+                        DiscountAmount = new decimal(0.00)
                     },
                                 });
                     context.SaveChanges();
@@ -193,6 +193,7 @@ namespace RunGroopWebApp.Data
                     });
                     context.SaveChanges();
                 }
+
 
             }
         }

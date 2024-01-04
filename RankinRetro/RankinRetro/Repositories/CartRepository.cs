@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using RankinRetro.Data;
 using RankinRetro.Interfaces;
+using RankinRetro.Migrations;
 using RankinRetro.Models;
 
 namespace RankinRetro.Repositories
@@ -25,6 +27,14 @@ namespace RankinRetro.Repositories
             string userId = _userManager.GetUserId(user);
             return userId;
         }
+
+        public  decimal GetDiscountAmount(string Discount)
+        {
+            var discounts =  _context.Discounts.ToListAsync();
+            var discountAmount = discounts.Result.FirstOrDefault(x => x.DiscountName == Discount).DiscountAmount;
+            return discountAmount;
+        }
+
 
         public async Task<int> AddItem(int productID, int qty)
         {
@@ -78,9 +88,107 @@ namespace RankinRetro.Repositories
             return cartItemCount;
         }
 
-        public Task<bool> Checkout()
+        public async Task<Order> Checkout(decimal discountAmount)
         {
-            throw new NotImplementedException();
+            using var transaction = _context.Database.BeginTransaction();
+
+            var userID = GetUserID();
+
+            if (userID == null)
+            {
+                throw new Exception("No user logged in");
+
+            }
+
+            var cart = await GetCart(userID);
+            if (cart == null)
+            {
+                throw new Exception("Cart is invalid");
+            }
+
+            var cartDetails = _context.ShoppingCartDetail.Where(a => a.ShoppingCartId == cart.ShoppingCartId).ToList();
+            if (cartDetails.Count == 0)
+            {
+                throw new Exception("No items in cart");
+            }
+            if (discountAmount > 0)
+            {
+                var order = new Order
+                {
+                    OrderId = Guid.NewGuid(),
+                    CustomerId = userID,
+                    OrderDate = DateTime.UtcNow,
+                    Status = Data.Enum.Status.Pending,
+                    Total = Math.Round(cartDetails.Sum(x => x.Price * x.Quantity) * discountAmount, 2),
+                    DiscountAmount = discountAmount,
+                };
+
+                var Address = new OrderAddress
+                {
+                    OrderId = order.OrderId,
+                    CustomerId = userID,
+                    
+
+                };
+
+                _context.Orders.Add(order);
+                _context.SaveChanges();
+                foreach (var item in cartDetails)
+                {
+                    var productName = _context.Products.FirstOrDefaultAsync(x => x.ProductId == item.ProductId).Result.Name;
+                    var productImageURL = _context.Products.FirstOrDefaultAsync(x => x.ProductId == item.ProductId).Result.ImageURL;
+                    var orderDetail = new OrderItem
+                    {
+                        URL = productImageURL,
+                        Name = productName,
+                        ProductId = item.ProductId,
+                        OrderId = order.OrderId,
+                        Quantity = item.Quantity,
+                        Price = item.Price * discountAmount,
+                        DiscountAmount = discountAmount
+                    };
+                    _context.OrderItems.Add(orderDetail);
+                }
+                _context.RemoveRange(cartDetails);
+                _context.SaveChanges();
+
+                transaction.Commit();
+                return order;
+            }
+
+            else
+            {
+                var order = new Order
+                {
+                    CustomerId = userID,
+                    OrderDate = DateTime.UtcNow,
+                    Status = Data.Enum.Status.Pending,
+                    Total = Math.Round(cartDetails.Sum(x => x.Price * x.Quantity), 2)
+                };
+                _context.Orders.Add(order);
+                _context.SaveChanges();
+                foreach (var item in cartDetails)
+                {
+                    var productName = _context.Products.FirstOrDefaultAsync(x => x.ProductId == item.ProductId).Result.Name;
+                    var productImageURL = _context.Products.FirstOrDefaultAsync(x => x.ProductId == item.ProductId).Result.ImageURL;
+                    var orderDetail = new OrderItem
+                    {
+                        URL = productImageURL,
+                        Name = productName,
+                        ProductId = item.ProductId,
+                        OrderId = order.OrderId,
+                        Quantity = item.Quantity,
+                        Price = item.Price
+                    };
+                    _context.OrderItems.Add(orderDetail);
+                }
+                _context.RemoveRange(cartDetails);
+                _context.SaveChanges();
+
+                transaction.Commit();
+                return order;
+            }
+
         }
 
         public async Task<ShoppingCart> GetCart(string userId)
@@ -175,6 +283,25 @@ namespace RankinRetro.Repositories
                 return cartItemCount;
             }
             else { throw new Exception("Invalid user "); }
+        }
+
+        public bool AddBillingAddress(OrderBillingAddress billingAddress)
+        {
+            _context.OrderBillingAddresses.Add(billingAddress);
+            return Save();
+        }
+
+        public bool AddOrderAddress(OrderAddress orderAddress)
+        {
+            _context.OrderAddresses.Add(orderAddress);
+            return Save();
+        }
+
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
         }
     }
 }

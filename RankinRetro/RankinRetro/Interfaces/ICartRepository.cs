@@ -1,4 +1,6 @@
-﻿using RankinRetro.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using RankinRetro.Migrations;
+using RankinRetro.Models;
 
 namespace RankinRetro.Interfaces
 {
@@ -12,9 +14,15 @@ namespace RankinRetro.Interfaces
 
         Task<int> GetCartItemCount(string userId = "");
         Task<ShoppingCart> GetCart(string userId);
-        Task<bool> Checkout();
+        Task<Order> Checkout(decimal discountAmount);
 
         Task<int> AddOneItem(int productID);
+        
+        bool AddBillingAddress(OrderBillingAddress billingAddress);
+        bool AddOrderAddress(OrderAddress orderAddress);
+        decimal GetDiscountAmount(string discountCode);
+
+        bool Save();
 
     }
 }

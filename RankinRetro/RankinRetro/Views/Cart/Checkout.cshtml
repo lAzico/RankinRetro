@@ -1,0 +1,268 @@
+﻿@using RankinRetro.Data.Enum
+@model RankinRetro.ViewModels.CartDisplayViewModel
+
+<div class="container">
+      <div class="py-5 text-center">
+        <h2>Checkout form</h2>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4 order-md-2 mb-4">
+          <h4 class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-muted">Your cart</span>
+            <span class="badge badge-secondary badge-pill">3</span>
+          </h4>
+          <ul class="list-group mb-3">
+              @foreach(var cartItem in Model.CartItems){
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div>
+                <h6 class="my-0">@cartItem.Product.Name</h6>
+                <small class="text-muted"></small>
+              </div>
+                        <div>
+
+                            <small class="text-muted">@cartItem.Quantity items</small>
+                        </div>
+              <span class="text-muted">£@cartItem.Product.Price</span>
+            </li>
+              }
+              @if(ViewBag.TotalPriceDiscounted != null){
+            <li class="list-group-item d-flex justify-content-between bg-light">
+              <div class="text-success">
+                <h6 class="my-0"></h6>
+                <small>Discount code applied: @ViewBag.DiscountCode</small>
+              </div>
+              <span class="text-success">-£@ViewBag.AmountDiscounted</span>
+            </li>
+              }
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Total (GBP)</span>
+                    @if (ViewBag.TotalPriceDiscounted != null)
+                    {
+                        <strong>£@(ViewBag.TotalPriceDiscounted)</strong>
+                    }
+
+                    @if (ViewBag.TotalPriceDiscounted == null)
+                    {
+                        <strong>£@ViewBag.TotalPrice </strong>
+                    }
+
+            </li>
+          </ul>
+          <form method="post" action="Checkout">
+            <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Promo code" name="discountCode">
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-secondary">Redeem</button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <form method="post" asp-action="Checkout" class="col-md-8 order-md-1" id="billing-address-form">
+          <h4 class="mb-3">Billing address</h4>
+            <div class="row">
+                <input type="hidden" asp-for="CartItems">
+              <div class="col-md-3 mb-3">
+                <label asp-for="FirstName">First name</label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+              </div>
+              <div class="col-md-3 mb-3">
+                <label asp-for="Surname">Last name</label>
+                <input asp-for=Surname class="form-control" />
+                <span asp-validation-for="Surname" class="text-danger"></span>
+              </div>
+            </div>
+
+
+            <div class="mb-3">
+                <label asp-for="Title">Title</label>
+                <select asp-for="Title" asp-items="@Html.GetEnumSelectList<UserTitle>()" class="form-control">
+                    </select>
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+
+            <div class="mb-3">
+              <label asp-for="Email">Email</label>
+              <input asp-for="Email" class="form-control" />
+              <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="AddressFirstline">First line Address</label>
+                <input asp-for="AddressFirstline" class="form-control" />
+                <span asp-validation-for="AddressFirstline" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="AddressSecondline">Second line Address</label>
+                <input asp-for="AddressSecondline" class="form-control" />
+                <span asp-validation-for="AddressSecondline" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+              <div class="col-md-5 mb-3">
+                <label asp-for="CityTown">City/Town</label>
+                        <input asp-for="CityTown" class="form-control" />
+                <span asp-validation-for="CityTown" class="text-danger"></span>
+              </div>
+              <div class="col-md-3 mb-3">
+                <label asp-for="AddressPostcode">Postcode</label>
+                        <input asp-for="AddressPostcode" class="form-control" />
+                <span asp-validation-for="AddressPostcode" class="text-danger"></span>
+              </div>
+            </div>
+            <hr class="mb-4">
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="same-address" onchange="handleSameAddressChange()">
+              <label class="custom-control-label" for="same-address">Shipping address is the same as my billing address</label>
+            </div>
+
+        
+
+
+            <div class="ShippingAddressForm">
+                
+        <div class="col-md-8 order-md-1" id="shipping-address-form">
+                    <hr class="mb-4">
+                    <h4 class="mb-3">Shipping Address</h4>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ShippingTitle">Title</label>
+                                <select asp-for="ShippingTitle" asp-items="@Html.GetEnumSelectList<UserTitle>()" class="form-control"></select>
+                                <span asp-validation-for="ShippingTitle" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ShippingFirstName">First name</label>
+                                <input asp-for="ShippingFirstName" class="form-control" />
+                                <span asp-validation-for="ShippingFirstName" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ShippingSurname">Last name</label>
+                                <input asp-for=ShippingSurname class="form-control" />
+                                <span asp-validation-for="ShippingSurname" class="text-danger"></span>
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="mb-3">
+                            <label asp-for="ShippingEmail">Email</label>
+                            <input asp-for="ShippingEmail" class="form-control" />
+                            <span asp-validation-for="ShippingEmail" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ShippingAddressFirstline">First line Address</label>
+                            <input asp-for="ShippingAddressFirstline" class="form-control" />
+                            <span asp-validation-for="ShippingAddressFirstline" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ShippingAddressSecondline">Email</label>
+                            <input asp-for="ShippingAddressSecondline" class="form-control" />
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-5 mb-3">
+                                <label asp-for="ShippingCityTown">City/Town</label>
+                                <input asp-for="ShippingCityTown" class="form-control" />
+                                <span asp-validation-for="ShippingCityTown" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label asp-for="ShippingAddressPostcode">Postcode</label>
+                                <input asp-for="ShippingAddressPostcode" class="form-control" />
+                                <span asp-validation-for="ShippingAddressPostcode" class="text-danger"></span>
+                            </div>
+                        </div>
+                        </div>
+
+                </div>
+                <hr class="mb-4">
+         @*    <h4 class="mb-3">Payment</h4>
+            <div class="d-block my-3">
+                <div class="custom-control custom-radio">
+                    <input id="credit" name="paymentMethod" type="radio" class="custom-control-input" checked="" required="">
+                    <label class="custom-control-label" for="credit">Credit card</label>
+                </div>
+                <div class="custom-control custom-radio">
+                    <input id="debit" name="paymentMethod" type="radio" class="custom-control-input" required="">
+                    <label class="custom-control-label" for="debit">Debit card</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="cc-name">Name on card</label>
+                    <input type="text" class="form-control" id="cc-name" placeholder="" required="">
+                    <small class="text-muted">Full name as displayed on card</small>
+                    <div class="invalid-feedback">
+                        Name on card is required
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="cc-number">Credit card number</label>
+                    <input type="text" class="form-control" id="cc-number" placeholder="" required="">
+                    <div class="invalid-feedback">
+                        Credit card number is required
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <label for="cc-expiration">Expiration</label>
+                    <input type="text" class="form-control" id="cc-expiration" placeholder="" required="">
+                    <div class="invalid-feedback">
+                        Expiration date required
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="cc-expiration">CVV</label>
+                    <input type="text" class="form-control" id="cc-cvv" placeholder="" required="">
+                    <div class="invalid-feedback">
+                        Security code required
+                    </div>
+                </div>
+            </div>
+            <hr class="mb-4"> *@
+            <form method="post" action="Checkout">
+                <input type="hidden" class="form-control" name="discountAmount" value="@ViewBag.DiscountAmount" />
+                <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+            </form>
+       </form> 
+                        
+
+
+        </div>
+      </div>
+
+      <footer class="my-5 pt-5 text-muted text-center text-small">
+        <p class="mb-1">RankinRetro</p>
+        <ul class="list-inline">
+          <li class="list-inline-item"><a href="#">Privacy</a></li>
+          <li class="list-inline-item"><a href="#">Terms</a></li>
+          <li class="list-inline-item"><a href="#">Support</a></li>
+        </ul>
+      </footer>
+    </div>
+
+<script>
+    function handleSameAddressChange() {
+        if ($('#same-address').is(':checked')) {
+            $('#shipping-address-form input').each(function () {
+                var billingFieldId = $(this).attr('id').replace('Shipping', '');
+                $(this).val($('#' + billingFieldId).val());
+            });
+            $('#shipping-address-form select').each(function () {
+                var billingFieldId = $(this).attr('id').replace('Shipping', '');
+                $(this).val($('#' + billingFieldId).val());
+            });
+
+            $('#shipping-address-form').hide();
+        } else {
+            $('#shipping-address-form').show();
+        }
+    }
+</script>

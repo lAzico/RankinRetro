@@ -335,8 +335,8 @@ namespace RankinRetro.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("DiscountAmount")
-                        .HasColumnType("real");
+                    b.Property<decimal>("DiscountAmount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("DiscountName")
                         .IsRequired()
@@ -349,14 +349,16 @@ namespace RankinRetro.Migrations
 
             modelBuilder.Entity("RankinRetro.Models.Order", b =>
                 {
-                    b.Property<int>("OrderId")
+                    b.Property<Guid>("OrderId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
+                    b.Property<decimal>("DiscountAmount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
@@ -364,12 +366,112 @@ namespace RankinRetro.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<float>("Total")
-                        .HasColumnType("real");
+                    b.Property<decimal>("Total")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("OrderId");
 
                     b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("RankinRetro.Models.OrderAddress", b =>
+                {
+                    b.Property<int>("ShippingAddressId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ShippingAddressId"));
+
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ShippingAddressFirstline")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ShippingAddressPostcode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ShippingAddressSecondline")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ShippingCityTown")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ShippingFirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ShippingSurname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ShippingTitle")
+                        .HasColumnType("int");
+
+                    b.HasKey("ShippingAddressId");
+
+                    b.ToTable("OrderAddresses");
+                });
+
+            modelBuilder.Entity("RankinRetro.Models.OrderBillingAddress", b =>
+                {
+                    b.Property<int>("BillingAddressId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BillingAddressId"));
+
+                    b.Property<string>("AddressFirstline")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressPostcode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressSecondline")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CityTown")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Title")
+                        .HasColumnType("int");
+
+                    b.HasKey("BillingAddressId");
+
+                    b.ToTable("OrderBillingAddresses");
                 });
 
             modelBuilder.Entity("RankinRetro.Models.OrderItem", b =>
@@ -380,8 +482,18 @@ namespace RankinRetro.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderItemId"));
 
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
+                    b.Property<decimal>("DiscountAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -389,7 +501,13 @@ namespace RankinRetro.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<string>("URL")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("OrderItemId");
+
+                    b.HasIndex("OrderId");
 
                     b.ToTable("OrderItems");
                 });
@@ -566,6 +684,15 @@ namespace RankinRetro.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("RankinRetro.Models.OrderItem", b =>
+                {
+                    b.HasOne("RankinRetro.Models.Order", null)
+                        .WithMany("Details")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("RankinRetro.Models.ShoppingCartDetail", b =>
                 {
                     b.HasOne("RankinRetro.Models.Product", "Product")
@@ -583,6 +710,11 @@ namespace RankinRetro.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("ShoppingCart");
+                });
+
+            modelBuilder.Entity("RankinRetro.Models.Order", b =>
+                {
+                    b.Navigation("Details");
                 });
 
             modelBuilder.Entity("RankinRetro.Models.ShoppingCart", b =>
