@@ -18,8 +18,7 @@ namespace RankinRetro.Controllers
 
         public async Task<IActionResult> Index()
         {
-            
-            
+            //Making a new HomeView model with lists of products, categories and brands
             var viewModel = new HomeViewModel
             {
                 Products = await _homeRepository.GetAllProducts(),
