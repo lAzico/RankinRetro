@@ -11,14 +11,18 @@ namespace RankinRetro.ViewModels
         public decimal Price { get; set; }
         
         public int BrandId { get; set; }
+
+        //This list is so the brand ID can be compared against the brands for frontend display
         public List<Brand> Brands { get; set; }
 
-        
         public int CategoryId { get; set; }
+        //This list is so the category ID can be compared against the categories for frontend display
+
         public List<Category> Categories { get; set; }
         public Size Size { get; set; }
         public Colour Colour { get; set; }
         public Material Material { get; set; }
+        //IFormFile to allow files to be uploaded, this will be converted to a string URL with the image service
         public IFormFile ImageURL { get; set; }
 
 

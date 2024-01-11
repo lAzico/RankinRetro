@@ -18,14 +18,15 @@ namespace RankinRetro.Controllers
         public ProductController(IProductRepository productRepository, IOptions<AzureStorageConfig> config)
         {
             _productRepository = productRepository;
+            //The config is the Azure storage account's access information held in the SQL server
             _config = config.Value;
-
         }
 
 
-
+        //Depending on the product's ID viewed, the details are shown
         public async Task<IActionResult> Details(int id)
         {
+            
             var product = await _productRepository.GetByIdAsync(id);
             var brands = await _productRepository.GetAllBrands();
             var categories = await _productRepository.GetAllCategories();
@@ -38,8 +39,14 @@ namespace RankinRetro.Controllers
                 Price = product.Price,
                 CategoryId = product.CategoryId,
                 BrandId = product.BrandId,
+
+                /*The brands list is used to be able to compare the brand ID
+                against the enum of brands so the user can see the name of the brands, not the ID*/
                 brands = brands.ToList(),
+
+                //The categories list is used in the same way as the brands list
                 categories = categories.ToList(),
+
                 Size = product.Size,
                 Colour = product.Colour,
                 Material = product.Material,
@@ -48,6 +55,7 @@ namespace RankinRetro.Controllers
             return View(results);
         }
 
+       
         public async Task<IActionResult> Delete(int id)
         {
             Product product = await _productRepository.GetByIdAsync(id);
@@ -61,9 +69,6 @@ namespace RankinRetro.Controllers
             _productRepository.Delete(product);
             return RedirectToAction("Index", "Home");
         }
-
-
-
 
 
         public async Task<IActionResult> Create()
@@ -83,7 +88,10 @@ namespace RankinRetro.Controllers
             var product = await _productRepository.GetByIdAsync(id);
             var categories = await _productRepository.GetAllCategories();
             var brands = await _productRepository.GetAllBrands();
-            if (product == null) return RedirectToAction("Home");
+            if (product == null)
+            {
+                return RedirectToAction("Home");
+            }
             var productVM = new EditProductViewModel
             {
                 Name = product.Name,
@@ -96,10 +104,11 @@ namespace RankinRetro.Controllers
                 Size = product.Size,
                 Colour = product.Colour,
                 Material = product.Material,
-                
             };
             return View(productVM);
         }
+
+
         [HttpPost]
         public async Task<IActionResult> Edit(int id, EditProductViewModel productVM)
         {
@@ -108,42 +117,53 @@ namespace RankinRetro.Controllers
                 ModelState.AddModelError("", "Failed to edit Product");
                 return View("Edit", productVM);
             }
-
+            //Get product from the ID
             var userProduct = await _productRepository.GetByIdNoTrackingAsync(id);
+
+            //Retrieve the Azure config
             var configTask = _productRepository.GetAzureStorageConfigAsync("1");
             var config = await configTask;
+
+
             var categories = await _productRepository.GetAllCategories();
             var brands = await _productRepository.GetAllBrands();
+
             bool isUploaded = false;
 
             try
             {
-
+                //If statements for invalid config information
                 if (config.AccountKey == string.Empty || config.AccountName == string.Empty)
                 {
                     return BadRequest("Sorry, can't retrieve your storage details from appsettings.js");
                 }
-
                 if (config.ImageContainer == string.Empty)
                 {
                     return BadRequest("Image container is not configured");
                 }
 
+                //Check if the file uploaded is an image
                 if (ImageService.isImage(productVM.ImageURL))
                 {
                     if (productVM.ImageURL.Length > 0)
                     {
+                        //Read the file
                         using (Stream stream = productVM.ImageURL.OpenReadStream())
                         {
+
+                            //Upload the file to the Azure container
                             isUploaded = await ImageService.UploadFileToStorage(stream, productVM.ImageURL.FileName, productVM.Name, config);
 
                             if (isUploaded)
                             {
+                                //Retrieve the URLs from the folder of the product (this can be multiple images from previously uploaded versions)
                                 var thumbnailUrls = await ImageService.GetThumbNailUrls(config, productVM.Name);
+
                                 productVM.Brands = brands.ToList();
                                 productVM.Categories = categories.ToList();
                                 foreach (var url in thumbnailUrls)
                                 {
+                                    //Check if there is a URL: which contains the new file name which was uploaded
                                     if (url.Contains("https://" + config.AccountName + ".blob.core.windows.net/" + config.ImageContainer + "/" + productVM.Name + "/" + productVM.ImageURL.FileName))
 
 
@@ -164,9 +184,11 @@ namespace RankinRetro.Controllers
                                                 Size = productVM.Size,
                                                 Colour = productVM.Colour,
                                                 Material = productVM.Material,
+
+                                                //Set the new URL to the updated image URL
                                                 ImageURL = URLProduct
                                             };
-
+                                            
                                             await _productRepository.Update(product);
                                             return RedirectToAction("Index", "Home");
                                         }
@@ -203,6 +225,7 @@ namespace RankinRetro.Controllers
             var categories = await _productRepository.GetAllCategories();
             var brands = await _productRepository.GetAllBrands();
             bool isUploaded = false;
+
             var configTask = _productRepository.GetAzureStorageConfigAsync("1");
             var config = await configTask;
 
@@ -256,6 +279,7 @@ namespace RankinRetro.Controllers
                                         };
 
                                         _productRepository.Add(product);
+                                        //Redirect the user to the new product's details page
                                         return Redirect("Details/" + product.ProductId.ToString());
                                     }
                                     else

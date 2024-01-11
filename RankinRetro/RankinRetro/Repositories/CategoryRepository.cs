@@ -5,6 +5,8 @@ using RankinRetro.Models;
 
 namespace RankinRetro.Repositories
 {
+
+    //WIP - Will be added when adding search features
     public class CategoryRepository : ICategoryRepository
     {
         private readonly ApplicationDbContext _context;

@@ -23,6 +23,7 @@
         </div>
         <div class="form-control">
             <label asp-for="CategoryId">Category</label>
+            <!--This select list uses the IEnumerable "Categories", compares it to the category ID and then displays the name of the category where the ID would be in the select list-->
             <select asp-for="CategoryId" asp-items='new SelectList(Model.Categories, "CategoryId", "Name")' class="form-control"></select>
             <input type="hidden" asp-for="Categories">
         </div>

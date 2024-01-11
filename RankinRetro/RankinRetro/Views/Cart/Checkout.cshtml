@@ -182,6 +182,7 @@
 
                 </div>
                 <hr class="mb-4">
+                <!--Payment form for future use if the website was to accept payments-->
          @*    <h4 class="mb-3">Payment</h4>
             <div class="d-block my-3">
                 <div class="custom-control custom-radio">
@@ -227,7 +228,7 @@
                 </div>
             </div>
             <hr class="mb-4"> *@
-            <form method="post" action="Checkout">
+            <form method="post" action="CheckoutCart">
                 <input type="hidden" class="form-control" name="discountAmount" value="@ViewBag.DiscountAmount" />
                 <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
             </form>

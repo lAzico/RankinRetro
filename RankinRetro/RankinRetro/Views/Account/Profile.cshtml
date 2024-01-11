@@ -38,14 +38,15 @@
                 <label asp-for="CityTown" class="control-label"></label>
             <p>@Model.CityTown</p>
             </div>
+
+        <!--If statement only displays the second line if one is found-->
         @if (Model.AddressSecondline != null)
         {
             <div class="form-container">
                 <label asp-for="AddressSecondline" class="control-label"></label>
             <p>
-                @Model.AddressSecondline</p>
-            
-
+                @Model.AddressSecondline
+            </p>
             </div>
             }
         <div class="form-container">
@@ -89,6 +90,4 @@
     p {
         margin: 0; 
     }
-
-
 </style>
