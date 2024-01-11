@@ -13,16 +13,20 @@ namespace RankinRetro.Repositories
             _context = context;
 
         }
+
+        //Async task to return a list of products
         public async Task<List<Product>> GetAllProducts()
         {
             return await _context.Products.ToListAsync();
         }
 
+        //Async task to return a list of categories
         public async Task<List<Category>> GetCategories()
         {
             return await _context.Categories.ToListAsync();
         }
 
+        //Async task to return a list of brands
         public async Task<List<Brand>> GetBrands()
         {
             return await _context.Brands.ToListAsync();

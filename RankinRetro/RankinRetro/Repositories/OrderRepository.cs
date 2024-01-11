@@ -20,9 +20,12 @@ namespace RankinRetro.Repositories
             _httpContextAccessor = httpContextAccessor;
             _userManager = userManager;
         }
+
         public async Task<List<Order>> GetUserOrdersAsync()
         {
             string userId = GetUserID();
+
+            //Searching orders which have the user's ID
             var Orders = await _context.Orders.Where(order => order.CustomerId == userId).ToListAsync();
 
             return Orders;
@@ -30,22 +33,27 @@ namespace RankinRetro.Repositories
 
         public async Task<List<OrderItem>> GetOrderItemsAsync(Guid orderId)
         {
+            //Searching for items which have the order ID
             var orderItems = await _context.OrderItems.Where(order => order.OrderId == orderId).ToListAsync();
             return orderItems;
         }
 
 
-            public async Task<OrderItem> RemoveItem(Guid orderId, int productId)
-        {
-
+        public async Task<OrderItem> RemoveItem(Guid orderId, int productId)
+        {   
+            //Return a list of the items in the order passed through the parameter
             var orderItems = await GetOrderItemsAsync(orderId);
+
+            //Using the product ID passed through the parameter find the product from the list of items
             var product = orderItems.Where(x => x.ProductId == productId).FirstOrDefault();
 
-            if (product != null)
-            {
-                _context.Remove(product);
-                _context.SaveChanges();
-            }
+                if (product != null)
+                {
+                    //Remove and then save the context changes
+                    _context.Remove(product);
+                    _context.SaveChanges();
+                }
+
             return product;
         }
 
@@ -58,7 +66,8 @@ namespace RankinRetro.Repositories
 
             if (userID == order.CustomerId)
             {
-                //Only remove order if the status is pending and
+                //Only remove order if the status is pending (Every order will be pending until
+                //a way to pay for an order is implemented
                 if (order.Status == Data.Enum.Status.Pending)
                 {
                     _context.Remove(order);
@@ -83,7 +92,7 @@ namespace RankinRetro.Repositories
 
         public  Task<List<OrderAddress>> GetOrderAddressAsync(string customerId)
         {
-            var OrderAddresses = _context.OrderAddresses.Where(x => x.CustomerId ==customerId).ToListAsync();
+            var OrderAddresses = _context.OrderAddresses.Where(x => x.CustomerId == customerId).ToListAsync();
             return OrderAddresses;
         }
 

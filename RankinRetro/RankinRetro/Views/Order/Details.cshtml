@@ -14,8 +14,8 @@
               </div>
               <div class="card shadow-0 border mb-4">
                 <div class="card-body">
-                            @foreach (var orderItem in Model.OrderItems.Where(o => order.OrderId == o.OrderId))
-                            {
+                  @foreach (var orderItem in Model.OrderItems.Where(o => order.OrderId == o.OrderId))
+                  {
                                 
                   <div class="row">
                     <div class="col-md-2">
@@ -33,13 +33,13 @@
                     <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
                       <p class="text-muted mb-0 small">£@(orderItem.Quantity * orderItem.Price)</p>
                     </div>
-                                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                                        <form method="post" action="RemoveItem">
-                                            <button class="btn btn-danger">Cancel item</button>
-                                            <input type="hidden" name="orderId" value="@order.OrderId">
-                                            <input type="hidden" name="productId" value="@orderItem.ProductId">
-                                        </form>
-                                    </div>
+                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                            <form method="post" action="RemoveItem">
+                                <button class="btn btn-danger">Cancel item</button>
+                                <input type="hidden" name="orderId" value="@order.OrderId">
+                                <input type="hidden" name="productId" value="@orderItem.ProductId">
+                            </form>
+                        </div>
                   </div>
                   }
                 </div>
@@ -58,6 +58,7 @@
                         <p class="text-muted mb-0"></p>
                 <p class="text-muted mb-0"><span class="fw-bold me-4">Delivery Charges</span> Free</p>
               </div>
+              <!--For every order, the delivery address will display-->
                     @foreach(var deliveryAddress in Model.Address.Where(x => x.OrderId == order.OrderId))
                     {
                         <div class="d-flex justify-content-between">

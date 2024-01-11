@@ -43,8 +43,7 @@ namespace RankinRetro.Repositories
 
         public async Task<IEnumerable<Product>> GetByCategory(int id)
         {
-            return await _context.Products
-        .Where(c => c.CategoryId.Equals(id)).ToListAsync();
+            return await _context.Products.Where(c => c.CategoryId.Equals(id)).ToListAsync();
         }
 
         public async Task<Product> GetByIdAsync(int id)
@@ -54,9 +53,9 @@ namespace RankinRetro.Repositories
 
         public async Task<Product> GetByIdNoTrackingAsync(int id)
         {
+            //AsNoTracking tells the database not to track any changes made, making it a read only query
             return await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.ProductId == id);
         }
-
 
         public bool Save()
         {

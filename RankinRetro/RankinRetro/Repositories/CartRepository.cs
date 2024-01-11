@@ -209,7 +209,6 @@ namespace RankinRetro.Repositories
                 transaction.Commit();
                 return order;
             }
-
         }
 
         public async Task<ShoppingCart> GetCart(string userId)
@@ -218,6 +217,7 @@ namespace RankinRetro.Repositories
             return cart;
         }
 
+        //Method to retrieve the quantity of an item
         public async Task<int> GetCartItemCount(string userId = "")
         {
             if (!string.IsNullOrEmpty(userId))
@@ -236,6 +236,7 @@ namespace RankinRetro.Repositories
             var userId = GetUserID();
             if(userId != null)
             {
+                //Finding the cart from the user ID
                 var shoppingCart = await _context.ShoppingCarts.Include(a => a.Details)
                                                                .ThenInclude(a => a.Product)
                                                                .Where(a => a.CustomerId == userId).FirstOrDefaultAsync();
@@ -250,14 +251,17 @@ namespace RankinRetro.Repositories
 
         }
 
+
         public async Task<int> RemoveItem(int productID)
         {
             string userId = GetUserID();
             if (!string.IsNullOrEmpty(userId))
             {
+                //Find the user's cart
                 var cart = await GetCart(userId);
                 if (cart != null)
                 {
+                    //Find the specific cart item from the product ID
                     var cartItem = _context.ShoppingCartDetail.FirstOrDefault(a => a.ShoppingCartId == cart.ShoppingCartId && a.ProductId == productID);
                     if (cartItem == null)
                     {
