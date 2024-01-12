@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using RankinRetro.Data;
 using RankinRetro.Interfaces;
 using RankinRetro.Models;
@@ -8,10 +9,14 @@ namespace RankinRetro.Repositories
     public class ProductRepository : IProductRepository
     {
         private readonly ApplicationDbContext _context;
+        private readonly HttpContextAccessor _httpContentAccessor;
+        private readonly UserManager<Customer> _userManager;
 
-        public ProductRepository(ApplicationDbContext context)
+        public ProductRepository(ApplicationDbContext context, HttpContextAccessor httpContentAccessor, UserManager<Customer> userManager)
         {
             _context = context;
+            _httpContentAccessor = httpContentAccessor;
+            _userManager = userManager;
         }
         public bool Add(Product product)
         {
@@ -63,8 +68,26 @@ namespace RankinRetro.Repositories
             return saved > 0 ? true : false;
         }
 
+
+
         public async Task<bool> Update(Product product)
         {
+
+            var user = _httpContentAccessor.HttpContext.User;
+            var userID = _userManager.GetUserId(user);
+
+            List<OrderItem> orderItemProducts = _context.OrderItems.Where(x => x.ProductId == product.ProductId).ToList();
+
+            if (orderItemProducts.Any())
+            {
+                foreach (var orderProduct in orderItemProducts)
+                {
+                    orderProduct.Price = product.Price;
+                    orderProduct.Name = product.Name;
+                    orderProduct.URL = product.ImageURL;
+                    _context.Update(orderProduct);
+                }
+            }
             _context.Update(product);
             return Save();
         }
