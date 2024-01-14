@@ -6,24 +6,20 @@
     ViewData["Title"] = "Home Page";
 }
 
-<section class="jumbotron text-center">
-    <div class="container">
-        <h1 class="jumbotron-heading">RankinRetro
-        </h1>
-
-    </div>
-
+<section class="jumbotron text-center" style="width:1450px; justify-content:center">
     <div class="album py-5 bg-light">
-        <div class="container">
-          <div class="row">
-              @foreach( var item in Model.Products){ 
-            <div class="col-md-4">
-              <div class="card mb-4 box-shadow">
-                  <div class="card-header">
-                      <p class="card-text">@item.Name</p>
-                <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail" alt="Thumbnail [100%x225]" style="height: 225px; width: 100%; display: block;" src="@item.ImageURL" data-holder-rendered="true">
-                <div class="card-body">
-                  <p class="card-text">@item.Description<p/>
+        <div class="container" style="width:1450px; margin-left: 0px">
+          <div class="row" style="width:1450px">
+              @foreach( var item in Model.Products){
+                    <div class="col-md-3" style="width:290px">
+              <div class="card mb-4 box-shadow" style="width: 290px">
+                <div class="card-header" style="height:630px; padding:4px">
+                  <p class="card-text">@item.Name</p>
+                    <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail" style="height: 430px; width: 280px; display: block;" src="@item.ImageURL" data-holder-rendered="true">
+                                <div class="card-body" style="padding:0px">
+                  <p class="card-text" style="height:48px; margin-top:16px;">@item.Description<p/>
+                      </div>
+                      <div class="card-body" style="padding:0px">
                     <div class="btn-group">
                     <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">
                         <button class="btn btn-outline-primary">View</button>
@@ -40,7 +36,7 @@
                     <form method="post" action="~/Cart/AddItem">
                         <input type="hidden" name="ProductId" value="@item.ProductId" />
                         <input type="hidden" name="Quantity" value="1" />
-                        <button type="submit" class="btn btn-outline-success">Add To Cart</button>
+                        <button type="submit" class="btn btn-outline-success"><i class="bi bi-basket"></i></button>
                     </form>
                     }                  
                       
@@ -58,3 +54,4 @@
         </div>
      </div>
 </section>
+

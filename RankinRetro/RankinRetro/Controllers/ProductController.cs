@@ -130,85 +130,114 @@ namespace RankinRetro.Controllers
 
             bool isUploaded = false;
 
-            try
+            if (productVM.Image != null)
             {
-                //If statements for invalid config information
-                if (config.AccountKey == string.Empty || config.AccountName == string.Empty)
-                {
-                    return BadRequest("Sorry, can't retrieve your storage details from appsettings.js");
-                }
-                if (config.ImageContainer == string.Empty)
-                {
-                    return BadRequest("Image container is not configured");
-                }
 
-                //Check if the file uploaded is an image
-                if (ImageService.isImage(productVM.ImageURL))
+                try
                 {
-                    if (productVM.ImageURL.Length > 0)
+                    //If statements for invalid config information
+                    if (config.AccountKey == string.Empty || config.AccountName == string.Empty)
                     {
-                        //Read the file
-                        using (Stream stream = productVM.ImageURL.OpenReadStream())
+                        return BadRequest("Sorry, can't retrieve your storage details from appsettings.js");
+                    }
+                    if (config.ImageContainer == string.Empty)
+                    {
+                        return BadRequest("Image container is not configured");
+                    }
+
+                    //Check if the file uploaded is an image
+                    if (ImageService.isImage(productVM.Image))
+                    {
+                        if (productVM.Image.Length > 0)
                         {
-
-                            //Upload the file to the Azure container
-                            isUploaded = await ImageService.UploadFileToStorage(stream, productVM.ImageURL.FileName, productVM.Name, config);
-
-                            if (isUploaded)
+                            //Read the file
+                            using (Stream stream = productVM.Image.OpenReadStream())
                             {
-                                //Retrieve the URLs from the folder of the product (this can be multiple images from previously uploaded versions)
-                                var thumbnailUrls = await ImageService.GetThumbNailUrls(config, productVM.Name);
 
-                                productVM.Brands = brands.ToList();
-                                productVM.Categories = categories.ToList();
-                                foreach (var url in thumbnailUrls)
+                                //Upload the file to the Azure container
+                                isUploaded = await ImageService.UploadFileToStorage(stream, productVM.Image.FileName, productVM.Name, config);
+
+                                if (isUploaded)
                                 {
-                                    //Check if there is a URL: which contains the new file name which was uploaded
-                                    if (url.Contains("https://" + config.AccountName + ".blob.core.windows.net/" + config.ImageContainer + "/" + productVM.Name + "/" + productVM.ImageURL.FileName))
+                                    //Retrieve the URLs from the folder of the product (this can be multiple images from previously uploaded versions)
+                                    var thumbnailUrls = await ImageService.GetThumbNailUrls(config, productVM.Name);
 
-
+                                    productVM.Brands = brands.ToList();
+                                    productVM.Categories = categories.ToList();
+                                    foreach (var url in thumbnailUrls)
                                     {
-                                        var URLProduct = url;
+                                        //Check if there is a URL: which contains the new file name which was uploaded
+                                        if (url.Contains("https://" + config.AccountName + ".blob.core.windows.net/" + config.ImageContainer + "/" + productVM.Name + "/" + productVM.Image.FileName))
 
 
-                                        if (userProduct != null)
                                         {
-                                            var product = new Product
-                                            {
-                                                ProductId = id,
-                                                Name = productVM.Name,
-                                                Description = productVM.Description,
-                                                Price = productVM.Price,
-                                                BrandId = productVM.BrandId,
-                                                CategoryId = productVM.CategoryId,
-                                                Size = productVM.Size,
-                                                Colour = productVM.Colour,
-                                                Material = productVM.Material,
+                                            var URLProduct = url;
 
-                                                //Set the new URL to the updated image URL
-                                                ImageURL = URLProduct
-                                            };
-                                            
-                                            await _productRepository.Update(product);
-                                            return RedirectToAction("Index", "Home");
+
+                                            if (userProduct != null)
+                                            {
+                                                var product = new Product
+                                                {
+                                                    ProductId = id,
+                                                    Name = productVM.Name,
+                                                    Description = productVM.Description,
+                                                    Price = productVM.Price,
+                                                    BrandId = productVM.BrandId,
+                                                    CategoryId = productVM.CategoryId,
+                                                    Size = productVM.Size,
+                                                    Colour = productVM.Colour,
+                                                    Material = productVM.Material,
+
+                                                    //Set the new URL to the updated image URL
+                                                    ImageURL = URLProduct
+                                                };
+
+                                                await _productRepository.Update(product);
+                                                return RedirectToAction("Index", "Home");
+                                            }
                                         }
                                     }
                                 }
+
+
+
                             }
-
-
 
                         }
 
                     }
-                    
+                    return BadRequest("Invalid input or image format");
                 }
-                return BadRequest("Invalid input or image format");
+
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
 
-            catch (Exception ex)
+            if (userProduct != null)
             {
-                return BadRequest(ex.Message);
+                var product = new Product
+                {
+                    ProductId = id,
+                    Name = productVM.Name,
+                    Description = productVM.Description,
+                    Price = productVM.Price,
+                    BrandId = productVM.BrandId,
+                    CategoryId = productVM.CategoryId,
+                    Size = productVM.Size,
+                    Colour = productVM.Colour,
+                    Material = productVM.Material,
+                    ImageURL = userProduct.ImageURL
+                };
+                await _productRepository.Update(product);
+                return RedirectToAction("Index", "Home");
+
+            }
+            else
+            {
+                ModelState.AddModelError("", "Could not update product");
+                return RedirectToAction("Index", "Home");
             }
         }
         

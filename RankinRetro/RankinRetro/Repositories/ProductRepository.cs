@@ -76,6 +76,7 @@ namespace RankinRetro.Repositories
             var user = _httpContentAccessor.HttpContext.User;
             var userID = _userManager.GetUserId(user);
 
+            //Return a list of the OrderItems products which have the same product ID as the product passed in the parameter
             List<OrderItem> orderItemProducts = _context.OrderItems.Where(x => x.ProductId == product.ProductId).ToList();
 
             if (orderItemProducts.Any())
