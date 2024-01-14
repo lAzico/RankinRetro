@@ -17,11 +17,11 @@
         <div class="container">
           <div class="row">
               @foreach( var item in Model.Products){ 
-            <div class="col-md-4">
+            <div class="col-md-3">
               <div class="card mb-4 box-shadow">
                   <div class="card-header">
                       <p class="card-text">@item.Name</p>
-                <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail" alt="Thumbnail [100%x225]" style="height: 225px; width: 100%; display: block;" src="@item.ImageURL" data-holder-rendered="true">
+                                <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail" style="height: 430px; width: 280px; display: block;" src="@item.ImageURL" data-holder-rendered="true">
                 <div class="card-body">
                   <p class="card-text">@item.Description<p/>
                     <div class="btn-group">
@@ -40,7 +40,7 @@
                     <form method="post" action="~/Cart/AddItem">
                         <input type="hidden" name="ProductId" value="@item.ProductId" />
                         <input type="hidden" name="Quantity" value="1" />
-                        <button type="submit" class="btn btn-outline-success">Add To Cart</button>
+                                                <button type="submit" class="btn btn-outline-success"><i class="bi bi-basket"></i></button>
                     </form>
                     }                  
                       

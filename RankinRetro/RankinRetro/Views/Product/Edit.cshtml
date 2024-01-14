@@ -46,11 +46,38 @@
             <select asp-for="Material" asp-items="@Html.GetEnumSelectList<Material>()" class="form-control"></select>
         </div>
         <div class="form-control">
-            <label asp-for="ImageURL">Image</label>
-            <input asp-for="ImageURL" class="form-control" placeholder="Upload image" type="file">
-            <span asp-validation-for="ImageURL" class="text-danger"></span>
+            <label asp-for="Image">Image</label>
+            <input asp-for="Image" id="imageUpload" class="form-control" placeholder="Upload image" type="file" accept="image/jpeg,image/png">
+            <span asp-validation-for="Image" class="text-danger"></span>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
     
 </form>
+
+<script>
+    //Find the element by the ID
+    const imageUpload = document.getElementById('imageUpload');
+
+    //Make an event listener for file size to be less than 5 MB
+    imageUpload.addEventListener('change', function() {
+        const image = this.files[0];
+        const reader = new FileReader();
+        if (image.size > 5242880) {
+            alert('Image size exceeds 5MB')
+        }
+
+        reader.onload = function(event) {
+            const img = new Image();
+            img.onload = function() {
+
+                if (img.width != 280 && img.height != 430) {
+                    alert('Image dimensions must be 280 x 430')
+                    imageUpload.value = '';
+                }
+            };
+            img.src = event.target.result;
+        };
+        reader.readAsDataURL(image)
+    });
+</script>
