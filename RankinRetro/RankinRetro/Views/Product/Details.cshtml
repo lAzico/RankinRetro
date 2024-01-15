@@ -19,9 +19,11 @@
             @{
                 var categoryName = Model.categories.FirstOrDefault(c => c.CategoryId == Model.CategoryId)?.Name;
                 var brandName = Model.brands.FirstOrDefault(b => b.BrandId == Model.BrandId)?.Name;
+                var typeName = Model.Types.FirstOrDefault(t => t.TypeId == Model.TypeId)?.Name;
             }
             <p>@categoryName</p>
             <p>@brandName</p>
+            <p>@typeName</p>
             <p>@Model.Material</p>
             <p>£@Model.Price</p>
             <p>@Model.Size</p>

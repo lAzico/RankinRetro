@@ -32,6 +32,11 @@
             <select asp-for="BrandId" asp-items='new SelectList(Model.Brands, "BrandId", "Name")' class="form-control"></select>
             <input type="hidden" asp-for="Brands">
         </div>
+        <div class="form-control">
+            <label asp-for="TypeId">Type</label>
+            <select asp-for="TypeId" asp-items='new SelectList(Model.Types, "TypeId", "Name")' class="form-control"></select>
+            <input type="hidden" asp-for="Types">
+        </div>
             
         <div class="form-control">
             <label asp-for="Size">Size</label>

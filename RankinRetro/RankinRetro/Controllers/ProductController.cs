@@ -76,10 +76,12 @@ namespace RankinRetro.Controllers
             var productVM = new CreateProductViewModel();
             var categories = await _productRepository.GetAllCategories();
             var brands = await _productRepository.GetAllBrands();
+            var types = await _productRepository.GetAllTypes();
 
 
             productVM.Brands = brands.ToList();
             productVM.Categories = categories.ToList();
+            productVM.Types = types.ToList();
             return View(productVM);
         }
 
@@ -88,6 +90,7 @@ namespace RankinRetro.Controllers
             var product = await _productRepository.GetByIdAsync(id);
             var categories = await _productRepository.GetAllCategories();
             var brands = await _productRepository.GetAllBrands();
+            var types = await _productRepository.GetAllTypes();
             if (product == null)
             {
                 return RedirectToAction("Home");
@@ -101,6 +104,8 @@ namespace RankinRetro.Controllers
                 BrandId = product.BrandId,
                 Brands = brands.ToList(),
                 Categories = categories.ToList(),
+                TypeId = product.TypeId,
+                Types = types.ToList(),
                 Size = product.Size,
                 Colour = product.Colour,
                 Material = product.Material,
@@ -123,10 +128,6 @@ namespace RankinRetro.Controllers
             //Retrieve the Azure config
             var configTask = _productRepository.GetAzureStorageConfigAsync("1");
             var config = await configTask;
-
-
-            var categories = await _productRepository.GetAllCategories();
-            var brands = await _productRepository.GetAllBrands();
 
             bool isUploaded = false;
 
@@ -161,9 +162,6 @@ namespace RankinRetro.Controllers
                                 {
                                     //Retrieve the URLs from the folder of the product (this can be multiple images from previously uploaded versions)
                                     var thumbnailUrls = await ImageService.GetThumbNailUrls(config, productVM.Name);
-
-                                    productVM.Brands = brands.ToList();
-                                    productVM.Categories = categories.ToList();
                                     foreach (var url in thumbnailUrls)
                                     {
                                         //Check if there is a URL: which contains the new file name which was uploaded
@@ -184,9 +182,11 @@ namespace RankinRetro.Controllers
                                                     Price = productVM.Price,
                                                     BrandId = productVM.BrandId,
                                                     CategoryId = productVM.CategoryId,
+                                                    TypeId = productVM.TypeId,
                                                     Size = productVM.Size,
                                                     Colour = productVM.Colour,
                                                     Material = productVM.Material,
+
 
                                                     //Set the new URL to the updated image URL
                                                     ImageURL = URLProduct
@@ -225,6 +225,7 @@ namespace RankinRetro.Controllers
                     Price = productVM.Price,
                     BrandId = productVM.BrandId,
                     CategoryId = productVM.CategoryId,
+                    TypeId= productVM.TypeId,
                     Size = productVM.Size,
                     Colour = productVM.Colour,
                     Material = productVM.Material,
@@ -251,8 +252,7 @@ namespace RankinRetro.Controllers
                 return RedirectToAction("Home");
             }
 
-            var categories = await _productRepository.GetAllCategories();
-            var brands = await _productRepository.GetAllBrands();
+
             bool isUploaded = false;
 
             var configTask = _productRepository.GetAzureStorageConfigAsync("1");
@@ -278,8 +278,7 @@ namespace RankinRetro.Controllers
                         using (Stream stream = productVM.ImageURL.OpenReadStream())
                         {
                             isUploaded = await ImageService.UploadFileToStorage(stream, productVM.ImageURL.FileName, productVM.Name, config);
-                            productVM.Brands = brands.ToList();
-                            productVM.Categories = categories.ToList();
+
 
                             if (isUploaded)
                             {
@@ -301,6 +300,7 @@ namespace RankinRetro.Controllers
                                             Price = productVM.Price,
                                             BrandId = productVM.BrandId,
                                             CategoryId = productVM.CategoryId,
+                                            TypeId = productVM.TypeId,
                                             Size = productVM.Size,
                                             Colour = productVM.Colour,
                                             Material = productVM.Material,

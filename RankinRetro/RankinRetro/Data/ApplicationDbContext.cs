@@ -15,7 +15,7 @@ namespace RankinRetro.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Order> Orders { get; set; }
-
+        
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<ReviewAndRating> ReviewsAndRatings { get; set; }
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
@@ -24,6 +24,7 @@ namespace RankinRetro.Data
         public DbSet<ShoppingCartDetail> ShoppingCartDetail { get; set;}
         public DbSet<OrderAddress> OrderAddresses { get; set; }
         public DbSet<OrderBillingAddress> OrderBillingAddresses { get; set; }
+        public DbSet<Types> Types { get; set; }
 
     }
 }

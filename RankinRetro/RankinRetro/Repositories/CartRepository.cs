@@ -154,6 +154,7 @@ namespace RankinRetro.Repositories
                     //Find the name and image URL using the product ID
                     var productName = _context.Products.FirstOrDefaultAsync(x => x.ProductId == item.ProductId).Result.Name;
                     var productImageURL = _context.Products.FirstOrDefaultAsync(x => x.ProductId == item.ProductId).Result.ImageURL;
+                    var product = _context.Products.FirstOrDefaultAsync(x => x.ProductId == item.ProductId).Result;
 
                     //For every item in the cart, make a new item in the order with the same information and a discount applied
                     var orderDetail = new OrderItem
@@ -166,6 +167,9 @@ namespace RankinRetro.Repositories
                         Price = item.Price * discountAmount,
                         DiscountAmount = discountAmount
                     };
+
+                    product.QuantityPurchased =+ 1;
+                    
                     _context.OrderItems.Add(orderDetail);
                 }
                 _context.RemoveRange(cartDetails);
@@ -192,6 +196,7 @@ namespace RankinRetro.Repositories
                 {
                     var productName = _context.Products.FirstOrDefaultAsync(x => x.ProductId == item.ProductId).Result.Name;
                     var productImageURL = _context.Products.FirstOrDefaultAsync(x => x.ProductId == item.ProductId).Result.ImageURL;
+                    var product = _context.Products.FirstOrDefaultAsync(x => x.ProductId == item.ProductId).Result;
                     var orderDetail = new OrderItem
                     {
                         URL = productImageURL,
@@ -200,7 +205,9 @@ namespace RankinRetro.Repositories
                         OrderId = order.OrderId,
                         Quantity = item.Quantity,
                         Price = item.Price
+
                     };
+                    product.QuantityPurchased = +1;
                     _context.OrderItems.Add(orderDetail);
                 }
                 _context.RemoveRange(cartDetails);

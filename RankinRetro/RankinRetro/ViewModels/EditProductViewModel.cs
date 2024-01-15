@@ -13,6 +13,8 @@ namespace RankinRetro.ViewModels
 
         public int CategoryId { get; set; }
         public int BrandId { get; set; }
+        public int TypeId { get; set; }
+        public List<Types> Types { get; set; }
         public List<Brand> Brands { get; set; }
         public List<Category> Categories { get; set; }
         public Size Size { get; set; }
