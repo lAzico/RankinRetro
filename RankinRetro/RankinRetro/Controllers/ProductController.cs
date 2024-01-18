@@ -30,6 +30,7 @@ namespace RankinRetro.Controllers
             var product = await _productRepository.GetByIdAsync(id);
             var brands = await _productRepository.GetAllBrands();
             var categories = await _productRepository.GetAllCategories();
+            var types = await _productRepository.GetAllTypes();
             var results = new DisplayProductViewModel
 
             {
@@ -39,6 +40,7 @@ namespace RankinRetro.Controllers
                 Price = product.Price,
                 CategoryId = product.CategoryId,
                 BrandId = product.BrandId,
+                TypeId = product.TypeId,
 
                 /*The brands list is used to be able to compare the brand ID
                 against the enum of brands so the user can see the name of the brands, not the ID*/
@@ -47,6 +49,7 @@ namespace RankinRetro.Controllers
                 //The categories list is used in the same way as the brands list
                 categories = categories.ToList(),
 
+                Types = types.ToList(),
                 Size = product.Size,
                 Colour = product.Colour,
                 Material = product.Material,
