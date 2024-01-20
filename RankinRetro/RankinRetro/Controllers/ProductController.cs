@@ -12,6 +12,7 @@ namespace RankinRetro.Controllers
     {
         private readonly IProductRepository _productRepository;
         private readonly AzureStorageConfig _config;
+        private readonly ImageService _imageService;
 
 
         public ProductController(IProductRepository productRepository, IOptions<AzureStorageConfig> config)
