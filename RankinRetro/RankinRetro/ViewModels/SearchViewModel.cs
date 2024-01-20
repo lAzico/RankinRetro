@@ -12,5 +12,5 @@ public class SearchViewModel
     public List<Types>? typesSearch { get; set; }
     public List<Brand>? brandsSearch { get; set; }
     public List<Category>? categoriesSearch { get; set; }
-    public List<Product> productsSearched { get; set; }
+    public List<Product>? productsSearched { get; set; }
 }
