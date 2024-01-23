@@ -16,16 +16,16 @@ namespace RankinRetro.Repositories
         }
 
 
-        public List<Product> SearchProduct(List<Types> types, List<Brand> brands, List<Category> categories)
+        public List<Product> SearchProduct(List<int> types, List<int> brands, List<int> categories)
         {
             //Make queryable to allow filtering of products
-            IQueryable<Product> productsQuery = _context.Products;
+            IQueryable<Product> productsQuery =  _context.Products;
             List<Product> products = new List<Product>();
 
             if (types != null && types.Any())
             {
                 //Get the type Ids from the types List passed in the parameter
-                IEnumerable<int> selectedTypeIds = types.Select(t => t.TypeId);
+                IEnumerable<int> selectedTypeIds = types.Select(t => t);
 
                 //Find the products which contains the types
                 productsQuery = productsQuery.Where(p => selectedTypeIds.Contains(p.TypeId));
@@ -40,7 +40,7 @@ namespace RankinRetro.Repositories
             if (brands != null && brands.Any())
             {
 
-                IEnumerable<int> selectedBrandIds = brands.Select(b => b.BrandId);
+                IEnumerable<int> selectedBrandIds = brands.Select(b => b);
 
                 productsQuery = productsQuery.Where(p => selectedBrandIds.Contains(p.BrandId));
                 foreach (var product in productsQuery)
@@ -52,7 +52,7 @@ namespace RankinRetro.Repositories
             if (categories != null && categories.Any())
             {
 
-                IEnumerable<int> selectedCategoryIds = categories.Select(b => b.CategoryId);
+                IEnumerable<int> selectedCategoryIds = categories.Select(b => b);
 
                 productsQuery = productsQuery.Where(p => selectedCategoryIds.Contains(p.CategoryId));
                 foreach(var product in productsQuery)

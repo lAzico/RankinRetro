@@ -2,8 +2,11 @@
 @model SearchViewModel
 
 
-<div class="container mt-5">
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Customer> SignInManager
 
+<div class="container mt-5">
+    <form action="Index" method="post">
     <div class="row d-flex justify-content-center">
         <div class="col-md-10">
             <div class="card p-3  py-4">
@@ -15,65 +18,187 @@
                         <button class="btn btn-secondary btn-block"><i class="bi bi-search "></i></button>
                     </div>
                 </div>
-                <div class="mt-3">
-                    <a data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" class="advanced">
-                        Advanced Search With Filters <i class="fa fa-angle-down"></i>
-                    </a>
-                    <div class="collapse" id="collapseExample">
-                        <div class="card card-body">
-                            <div class="row">
-                                <div class="col md-4">
-                                    <div class="dropdown">
-                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Select Types
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                            @foreach (var type in Model.types)
-                                            {
-                                                <li class="form-check">
-                                                    <input class="form-check-input" type="checkbox" value="@type.TypeId" id="type-@type.TypeId"> 
-                                                    <label class="form-check-label" for="type-@type.TypeId">@type.Name</label>
-                                                </li>
-                                            }
-                                        </ul>
-                                    </div>
-                                    <div class="dropdown">
-                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Select Brands
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                                            @foreach (var brand in Model.brands)
-                                            {
-                                                <li class="form-check">
-                                                    <input class="form-check-input" type="checkbox" value="@brand.BrandId" id="type-@brand.BrandId"> 
-                                                    <label class="form-check-label" for="type-@brand.BrandId">@brand.Name</label>
-                                                </li>
-                                            }
-                                        </ul>
-                                    </div>
-                                    <div class="dropdown">
-                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Select Categories
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
-                                            @foreach (var category in Model.categories)
-                                            {
-                                                <li class="form-check">
-                                                    <input class="form-check-input" type="checkbox" value="@category.CategoryId" id="type-@category.CategoryId"> 
-                                                    <label class="form-check-label" for="type-@category.CategoryId">@category.Name</label>
-                                                </li>
-                                            }
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <div class="mt-3 d-flex">
+                    <div class="dropdown mx-1">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Select Types
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            @foreach (var type in Model.types)
+                            {
+                                <li class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="@type.TypeId" id="type-@type.TypeId" name="types"> 
+                                    <label class="form-check-label" for="type-@type.TypeId">@type.Name</label>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Select Brands
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                            @foreach (var brand in Model.brands)
+                            {
+                                <li class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="@brand.BrandId" id="brand-@brand.BrandId" name="brands"> 
+                                    <label class="form-check-label" for="type-@brand.BrandId">@brand.Name</label>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Select Categories
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
+                            @foreach (var category in Model.categories)
+                            {
+                                <li class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="@category.CategoryId" id="category-@category.CategoryId" name="categories">
+                                    <label class="form-check-label" for="type-@category.CategoryId">@category.Name</label>
+                                </li>
+                            }
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    </form>
 </div>
+
+<section class="jumbotron text-center" style="justify-content:center">
+    <div class="album py-5">
+        <div class="container" style="width:1450px; margin-left: 0px">
+            <div class="row" style="width:1450px">
+                @foreach (var item in Model.Products)
+                {
+                    <div class="col-md-3" style="width:290px">
+                        <div class="card mb-4 box-shadow" style="width: 290px">
+                            <div class="card-header" style="height:630px; padding:4px">
+                                <p class="card-text">@item.Name</p>
+                                <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail" style="height: 430px; width: 280px; display: block;" src="@item.ImageURL" data-holder-rendered="true">
+                                <div class="card-body" style="padding:0px">
+                                    <p class="card-text" style="height:48px; margin-top:16px;">@item.Description<p />
+                                </div>
+                                <div class="card-body" style="padding:0px">
+                                    <div class="btn-group">
+                                        <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">
+                                            <button class="btn btn-outline-primary">View</button>
+                                        </a>
+                                        <!--Checking if the user is an admin, if they are then it will display this if statement-->
+                                        @if (User.IsInRole("admin") && SignInManager.IsSignedIn(User))
+                                        {
+                                            <a asp-controller="Product" asp-action="Edit" asp-route-id="@item.ProductId">
+                                                <button class="btn btn-outline-warning">Edit</button>
+                                            </a>
+                                            <form asp-controller="Product" asp-action="DeleteProductHome" asp-route-id="@item.ProductId">
+                                                <button class="btn btn-outline-danger">Delete</button>
+                                            </form>
+                                            <form method="post" action="~/Cart/AddItem">
+                                                <input type="hidden" name="ProductId" value="@item.ProductId" />
+                                                <input type="hidden" name="Quantity" value="1" />
+                                                <button type="submit" class="btn btn-outline-success"><i class="bi bi-basket"></i></button>
+                                            </form>
+                                        }
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script>
+
+    
+    //Find all the checkboxes
+    const typesCheckboxes = document.querySelectorAll('input[type="checkbox"][name="types"]');
+    const brandsCheckboxes = document.querySelectorAll('input[type="checkbox"][name="brands"]');
+    const categoriesCheckboxes = document.querySelectorAll('input[type="checkbox"][name="categories"]');
+
+    //Make an array for each dropdown list
+    let selectedTypes = [];
+    let selectedBrands = [];
+    let selectedCategories = [];
+
+    //Check each checkbox with an event listener on state change
+    typesCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            
+            if (checkbox.checked) 
+            {
+                //Add the value of the selected checkbox to the array of types
+                selectedTypes.push(checkbox.value);
+            } 
+
+            else 
+            {
+                selectedTypes = selectedTypes.filter(value => value !== checkbox.value);
+            }
+            console.log("Selected Types:", selectedTypes);
+        })
+        });
+
+
+    brandsCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            if (checkbox.checked) 
+            {
+                selectedBrands.push(checkbox.value);
+            } 
+            else 
+            {
+                selectedBrands = selectedBrands.filter(value => value !== checkbox.value);
+            }
+            console.log("Selected Brands:", selectedBrands);
+        })
+        });
+
+    categoriesCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            if (checkbox.checked) 
+            {
+                selectedCategories.push(checkbox.value);
+            } 
+            else 
+            {
+                selectedCategories = selectedCategories.filter(value => value !== checkbox.value);
+            }
+            console.log("Selected Categories:", selectedCategories);
+        })
+        });
+
+    
+
+    $.ajax({
+        url: '@Url.Action("Index", "Search")',
+        type: 'POST',
+        dataType: 'html',
+        data: {
+            typesSearched: selectedTypes,
+            categoriesSearched: selectedCategories,
+            brandsSearched: selectedBrands
+        },
+        success: function (result) {
+            $('#product-list').html(result);
+        },
+        error: function () {
+            console.log('An error has occured while trying to retrieve filtered product data')
+        }
+    });
+            
+
+</script>
+
 
 <style>
     .advanced {
@@ -102,3 +227,4 @@
         border: 1px solid #00838f;
     }
 </style>
+

@@ -21,6 +21,7 @@ namespace RankinRetro.Controllers
             var types = _productRepository.GetAllTypes().Result.ToList();
             var brands = _productRepository.GetAllBrands().Result.ToList();
             var categories = _productRepository.GetAllCategories().Result.ToList();
+            
 
             SearchViewModel searchVM = new SearchViewModel()
             {
@@ -33,11 +34,25 @@ namespace RankinRetro.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(SearchViewModel searchVM)
+        public IActionResult Index(int[] typesSearch, int[] brandsSearch, int[] categoriesSearch)
+        
         {
-            var productsList = _searchRepository.SearchProduct(searchVM.typesSearch, searchVM.brandsSearch, searchVM.categoriesSearch);
-            searchVM.productsSearched = productsList;
-            
+            var productsList = _searchRepository.SearchProduct(typesSearch.ToList(), brandsSearch.ToList(), categoriesSearch.ToList());
+           
+
+            var products = _productRepository.GetAllProducts().Result.ToList();
+            var types = _productRepository.GetAllTypes().Result.ToList();
+            var brands = _productRepository.GetAllBrands().Result.ToList();
+            var categories = _productRepository.GetAllCategories().Result.ToList();
+
+            SearchViewModel searchVM = new SearchViewModel()
+            {
+                Products = productsList,
+                types = types,
+                brands = brands,
+                categories = categories
+                
+        };
             return RedirectToAction("Index", searchVM);
 
         }
