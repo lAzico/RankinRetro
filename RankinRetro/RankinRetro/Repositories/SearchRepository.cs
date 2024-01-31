@@ -1,6 +1,7 @@
 ﻿using RankinRetro.Data;
 using RankinRetro.Interfaces;
 using RankinRetro.Models;
+using System.Linq;
 
 namespace RankinRetro.Repositories
 {
@@ -16,7 +17,7 @@ namespace RankinRetro.Repositories
         }
 
 
-        public List<Product> SearchProduct(List<int> types, List<int> brands, List<int> categories)
+        public List<Product> SearchProduct(List<string> types, List<string> brands, List<string> categories)
         {
             //Make queryable to allow filtering of products
             IQueryable<Product> productsQuery =  _context.Products;
@@ -25,10 +26,11 @@ namespace RankinRetro.Repositories
             if (types != null && types.Any())
             {
                 //Get the type Ids from the types List passed in the parameter
-                IEnumerable<int> selectedTypeIds = types.Select(t => t);
+                IEnumerable<string> selectedTypeIds = types.Select(t => t);
+                List<string> selectedTypeIdsList = selectedTypeIds.ToList();
 
                 //Find the products which contains the types
-                productsQuery = productsQuery.Where(p => selectedTypeIds.Contains(p.TypeId));
+                productsQuery = productsQuery.Where(p => selectedTypeIdsList.Contains(p.TypeId.ToString()));
 
                 //Iterate over the products queried and add it to a list of products
                 foreach (var product in productsQuery)
@@ -40,9 +42,10 @@ namespace RankinRetro.Repositories
             if (brands != null && brands.Any())
             {
 
-                IEnumerable<int> selectedBrandIds = brands.Select(b => b);
+                IEnumerable<string> selectedBrandIds = brands.Select(b => b);
+                List<string> selectedBrandIdsList = selectedBrandIds.ToList();
 
-                productsQuery = productsQuery.Where(p => selectedBrandIds.Contains(p.BrandId));
+                productsQuery = productsQuery.Where(p => selectedBrandIdsList.Contains(p.BrandId.ToString()));
                 foreach (var product in productsQuery)
                 {
                     products.Add(product);
@@ -52,9 +55,10 @@ namespace RankinRetro.Repositories
             if (categories != null && categories.Any())
             {
 
-                IEnumerable<int> selectedCategoryIds = categories.Select(b => b);
+                IEnumerable<string> selectedCategoryIds = categories.Select(b => b);
+                List<string> selectedCategoryIdsList = selectedCategoryIds.ToList();
 
-                productsQuery = productsQuery.Where(p => selectedCategoryIds.Contains(p.CategoryId));
+                productsQuery = productsQuery.Where(p => selectedCategoryIdsList.Contains(p.CategoryId.ToString()));
                 foreach(var product in productsQuery)
                 {
                     products.Add(product);

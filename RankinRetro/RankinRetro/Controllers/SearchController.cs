@@ -34,10 +34,10 @@ namespace RankinRetro.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(int[] typesSearch, int[] brandsSearch, int[] categoriesSearch)
-        
+        public IActionResult Index(string[] typesSearch, string[] brandsSearch, string[] categoriesSearch)
         {
             var productsList = _searchRepository.SearchProduct(typesSearch.ToList(), brandsSearch.ToList(), categoriesSearch.ToList());
+
            
 
             var products = _productRepository.GetAllProducts().Result.ToList();
@@ -45,15 +45,40 @@ namespace RankinRetro.Controllers
             var brands = _productRepository.GetAllBrands().Result.ToList();
             var categories = _productRepository.GetAllCategories().Result.ToList();
 
-            SearchViewModel searchVM = new SearchViewModel()
+            //Return the ViewModel with products if there has been no filter applied
+            if (productsList.Count == 0)
             {
-                Products = productsList,
-                types = types,
-                brands = brands,
-                categories = categories
-                
-        };
-            return RedirectToAction("Index", searchVM);
+                SearchViewModel searchVM = new SearchViewModel()
+                {
+                    Products = products,
+                    types = types,
+                    brands = brands,
+                    categories = categories,
+                    categoriesSearch = categoriesSearch.ToList(),
+                    typesSearch = typesSearch.ToList(),
+                    brandsSearch = brandsSearch.ToList()
+
+                };
+                return RedirectToAction("Index", "Search", searchVM);
+            }
+
+            else
+            {
+                SearchViewModel searchVM = new SearchViewModel()
+                {
+                    Products = productsList,
+                    types = types,
+                    brands = brands,
+                    categories = categories,
+                    categoriesSearch = categoriesSearch.ToList(),
+                    typesSearch = typesSearch.ToList(),
+                    brandsSearch = brandsSearch.ToList()
+
+                };
+                return RedirectToAction("Index", "Search", searchVM);
+
+            }
+           
 
         }
     }

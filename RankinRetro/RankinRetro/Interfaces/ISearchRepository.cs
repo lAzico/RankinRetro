@@ -4,7 +4,7 @@ namespace RankinRetro.Interfaces
 {
     public interface ISearchRepository
     {
-        List<Product> SearchProduct(List<int> types, List<int> brands, List<int> categories); 
+        List<Product> SearchProduct(List<string> types, List<string> brands, List<string> categories); 
 
     }
 }
