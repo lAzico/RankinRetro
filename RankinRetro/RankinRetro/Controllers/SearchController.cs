@@ -15,30 +15,36 @@ namespace RankinRetro.Controllers
             _productRepository = productRepository;
         }
 
-        public IActionResult Index() 
+        public IActionResult Index(SearchViewModel newSearchVM) 
         {
             var products = _productRepository.GetAllProducts().Result.ToList();
             var types = _productRepository.GetAllTypes().Result.ToList();
             var brands = _productRepository.GetAllBrands().Result.ToList();
             var categories = _productRepository.GetAllCategories().Result.ToList();
-            
 
-            SearchViewModel searchVM = new SearchViewModel()
+
+            if (newSearchVM.brands != null)
             {
-                Products = products,
-                types = types,
-                brands = brands,
-                categories = categories
-            };
-            return View(searchVM);
+                return View(newSearchVM);
+            }
+            else
+            {
+                SearchViewModel searchVM = new SearchViewModel()
+                {
+                    Products = products,
+                    types = types,
+                    brands = brands,
+                    categories = categories
+                };
+                return View(searchVM);
+            }
         }
 
         [HttpPost]
-        public IActionResult Index(string[] typesSearch, string[] brandsSearch, string[] categoriesSearch)
+        public IActionResult Results(string[] typesSearch, string[] brandsSearch, string[] categoriesSearch)
         {
+            //Filtered products
             var productsList = _searchRepository.SearchProduct(typesSearch.ToList(), brandsSearch.ToList(), categoriesSearch.ToList());
-
-           
 
             var products = _productRepository.GetAllProducts().Result.ToList();
             var types = _productRepository.GetAllTypes().Result.ToList();
@@ -59,7 +65,7 @@ namespace RankinRetro.Controllers
                     brandsSearch = brandsSearch.ToList()
 
                 };
-                return RedirectToAction("Index", "Search", searchVM);
+                return View("Index", searchVM);
             }
 
             else
@@ -75,7 +81,7 @@ namespace RankinRetro.Controllers
                     brandsSearch = brandsSearch.ToList()
 
                 };
-                return RedirectToAction("Index", "Search", searchVM);
+                return PartialView("_FilteredProductsPartial", searchVM);
 
             }
            

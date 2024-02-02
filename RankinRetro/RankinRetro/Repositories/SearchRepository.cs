@@ -35,7 +35,10 @@ namespace RankinRetro.Repositories
                 //Iterate over the products queried and add it to a list of products
                 foreach (var product in productsQuery)
                 {
-                    products.Add(product);
+                    if (!products.Contains(product))
+                    {
+                        products.Add(product);
+                    }
                 }
             }
 
@@ -48,7 +51,11 @@ namespace RankinRetro.Repositories
                 productsQuery = productsQuery.Where(p => selectedBrandIdsList.Contains(p.BrandId.ToString()));
                 foreach (var product in productsQuery)
                 {
-                    products.Add(product);
+                    if (!products.Contains(product))
+                    {
+                        products.Add(product);
+                    }
+                    
                 }
             }
 
@@ -61,7 +68,10 @@ namespace RankinRetro.Repositories
                 productsQuery = productsQuery.Where(p => selectedCategoryIdsList.Contains(p.CategoryId.ToString()));
                 foreach(var product in productsQuery)
                 {
-                    products.Add(product);
+                    if (!products.Contains(product))
+                    {
+                        products.Add(product);
+                    }
                 }
                 
             }

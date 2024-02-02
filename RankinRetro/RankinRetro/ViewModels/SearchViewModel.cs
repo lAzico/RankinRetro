@@ -3,7 +3,6 @@
 namespace RankinRetro.ViewModels;
 public class SearchViewModel
 {
-    public List<Product> searchProducts { get; set; }
     public List<Product> Products { get; set; }
     public List<Types> types {  get; set; }
     public List<Brand> brands { get; set; }

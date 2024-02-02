@@ -196,6 +196,110 @@ namespace RunGroopWebApp.Data
                         Material = Material.Silk,
                         ImageURL = "https://example.com/images/blouse1.jpg"
                     },
+                            new Product()
+                    {
+                        Name = "Leather Jacket",
+                        Description = "Add an edge to your style with a classic leather jacket.",
+                        Price = new decimal(99.99),
+                        BrandId = 2,
+                        CategoryId = 5,
+                        TypeId = 7,
+                        Size = Size.L,
+                        Colour = Colour.Black,
+                        Material = Material.Leather,
+                        ImageURL = "https://example.com/images/jacket1.jpg"
+                    },
+                    new Product()
+                    {
+                        Name = "Striped Sweater",
+                        Description = "Stay cozy and stylish in a striped sweater.",
+                        Price = new decimal(49.99),
+                        BrandId = 3,
+                        CategoryId = 2,
+                        TypeId = 6,
+                        Size = Size.S,
+                        Colour = Colour.Blue,
+                        Material = Material.Wool,
+                        ImageURL = "https://example.com/images/sweater1.jpg"
+                    },
+                    new Product()
+                    {
+                        Name = "Floral Print Dress",
+                        Description = "Add a touch of femininity with a floral print dress.",
+                        Price = new decimal(59.99),
+                        BrandId = 1,
+                        CategoryId = 1,
+                        TypeId = 5,
+                        Size = Size.M,
+                        Colour = Colour.Pink,
+                        Material = Material.Cotton,
+                        ImageURL = "https://example.com/images/dress2.jpg"
+                    },
+                    new Product()
+                    {
+                        Name = "Classic Black Blazer",
+                        Description = "Elevate your look with a classic black blazer.",
+                        Price = new decimal(79.99),
+                        BrandId = 2,
+                        CategoryId = 2,
+                        TypeId = 10,
+                        Size = Size.L,
+                        Colour = Colour.Black,
+                        Material = Material.Polyester,
+                        ImageURL = "https://example.com/images/blazer1.jpg"
+                    },
+                    new Product()
+                    {
+                        Name = "Ripped Skinny Jeans",
+                        Description = "Stay on-trend with ripped skinny jeans.",
+                        Price = new decimal(49.99),
+                        BrandId = 3,
+                        CategoryId = 2,
+                        TypeId = 4,
+                        Size = Size.S,
+                        Colour = Colour.Blue,
+                        Material = Material.Denim,
+                        ImageURL = "https://example.com/images/jeans2.jpg"
+                    },
+                    new Product()
+                    {
+                        Name = "Strappy Sandals",
+                        Description = "Step out in style with chic strappy sandals.",
+                        Price = new decimal(39.99),
+                        BrandId = 4,
+                        CategoryId = 6,
+                        TypeId = 8,
+                        Size = Size.M,
+                        Colour = Colour.Brown,
+                        Material = Material.Leather,
+                        ImageURL = "https://example.com/images/sandals1.jpg"
+                    },
+                    new Product()
+                    {
+                        Name = "Printed Swim Trunks",
+                        Description = "Make a statement at the beach with printed swim trunks.",
+                        Price = new decimal(29.99),
+                        BrandId = 5,
+                        CategoryId = 6,
+                        TypeId = 19,
+                        Size = Size.L,
+                        Colour = Colour.Green,
+                        Material = Material.Polyester,
+                        ImageURL = "https://example.com/images/swimtrunks1.jpg"
+                    },
+                    new Product()
+                    {
+                        Name = "Cozy Pajama Set",
+                        Description = "Stay comfortable all night in a cozy pajama set.",
+                        Price = new decimal(34.99),
+                        BrandId = 1,
+                        CategoryId = 7,
+                        TypeId = 22,
+                        Size = Size.XL,
+                        Colour = Colour.Blue,
+                        Material = Material.Cotton,
+                        ImageURL = "https://example.com/images/pajama1.jpg"
+},
                     });
                     context.SaveChanges();
                 }
@@ -310,10 +414,24 @@ namespace RunGroopWebApp.Data
                 });
                     context.SaveChanges();
                 }
-            
+                //Input azure storage config details
+/*                if (!context.Configs.Any())
+                {
+                    context.Configs.AddRange(new List<AzureStorageConfig>()
 
-
-                }
+                        {
+                        new AzureStorageConfig()
+                        {
+                            Id = "",
+                            AccountKey = "",
+                            AccountName = "",
+                            ImageContainer = "",
+                            ThumbnailContainer = ""
+                        }
+                        });
+                    context.SaveChanges();
+                }*/
+            }
             }
         
 

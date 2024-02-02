@@ -6,7 +6,6 @@
 @inject SignInManager<Customer> SignInManager
 
 <div class="container mt-5">
-    <form action="Index" method="post">
     <div class="row d-flex justify-content-center">
         <div class="col-md-10">
             <div class="card p-3  py-4">
@@ -56,19 +55,18 @@
                         </ul>
                     </div>
                         <div class="col-md-3">
-                            <button class="btn btn-secondary btn-block">Filter <i class="bi bi-funnel"></i></button>
+                            <button id ="filterButton" class="btn btn-secondary btn-block">Filter <i class="bi bi-funnel"></i></button>
                         </div>
                 </div>
             </div>
         </div>
     </div>
-    </form>
 </div>
 
 <section class="jumbotron text-center" style="justify-content:center">
-    <div class="album py-5">
+    <div class="album py-5" id="productslist">
         <div class="container" style="width:1450px; margin-left: 0px">
-            <div class="row" style="width:1450px">
+            <div class="row">
                 @foreach (var item in Model.Products)
                 {
                     <div class="col-md-3" style="width:290px">
@@ -99,9 +97,7 @@
                                                 <button type="submit" class="btn btn-outline-success"><i class="bi bi-basket"></i></button>
                                             </form>
                                         }
-
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -178,24 +174,35 @@
     console.log(selectedBrands);
     console.log(selectedTypes);
 
-    $.ajax({
-        url: '@Url.Action("Index", "Search")',
-        type: 'POST',
-        data: {
-            typesSearch: selectedTypes,
-            categoriesSearch: selectedCategories,
-            brandsSearch: selectedBrands
-        },
-        traditional: true,
-        success: function (result) {
-            
-        },
-        error: function () {
-            console.log('An error has occured while trying to retrieve filtered product data')
-        },
-    });
-            
+    $(document).ready(function () {
+        // Function to handle AJAX call
+        function performSearch() {
+            $.ajax({
+                url: '@Url.Action("Results", "Search")',
+                type: 'POST',
+                data: {
+                    typesSearch: selectedTypes,
+                    categoriesSearch: selectedCategories,
+                    brandsSearch: selectedBrands
+                },
+                traditional: true,
+                success: function (result) {
+                    // Update the view with the filtered products
+                    $('#productslist').html(result);
+                    
+                },
+                error: function () {
+                    console.log('An error has occurred while trying to retrieve filtered product data');
+                },
+            });
+        }
 
+        // Event listener for filter button click
+        $('#filterButton').click(function () {
+            // Call the function to perform the search
+            performSearch();
+        });
+    });
 </script>
 
 

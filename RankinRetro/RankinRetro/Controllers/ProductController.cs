@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using RankinRetro.Data.Enum;
 using RankinRetro.Interfaces;
@@ -131,7 +132,7 @@ namespace RankinRetro.Controllers
             //Retrieve the Azure config
             var configTask = _productRepository.GetAzureStorageConfigAsync("1");
             var config = await configTask;
-
+            
             bool isUploaded = false;
 
             if (productVM.Image != null)
