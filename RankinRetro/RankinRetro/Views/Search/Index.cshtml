@@ -64,9 +64,9 @@
 </div>
 
 <section class="jumbotron text-center" style="justify-content:center">
-    <div class="album py-5" id="productslist">
+    <div class="album py-5">
         <div class="container" style="width:1450px; margin-left: 0px">
-            <div class="row">
+            <div class="row" id="productslist">
                 @foreach (var item in Model.Products)
                 {
                     <div class="col-md-3" style="width:290px">

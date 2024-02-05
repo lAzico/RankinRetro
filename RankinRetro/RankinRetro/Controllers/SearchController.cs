@@ -65,7 +65,7 @@ namespace RankinRetro.Controllers
                     brandsSearch = brandsSearch.ToList()
 
                 };
-                return View("Index", searchVM);
+                return PartialView("_FilteredProductsPartial", searchVM);
             }
 
             else
