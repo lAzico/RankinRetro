@@ -1,4 +1,5 @@
-﻿using RankinRetro.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using RankinRetro.Models;
 
 namespace RankinRetro.Interfaces
 {
@@ -9,6 +10,8 @@ namespace RankinRetro.Interfaces
         Task<IEnumerable<Category>> GetAllCategories();
         Task<IEnumerable<Brand>> GetAllBrands();
         Task<Product> GetByIdAsync(int id);
+        Task<IEnumerable<Types>> GetAllTypes();
+
 
         Task<Product> GetByIdNoTrackingAsync(int id);
         Task<IEnumerable<Product>> GetByCategory(int id);

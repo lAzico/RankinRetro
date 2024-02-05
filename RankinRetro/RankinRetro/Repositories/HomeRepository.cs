@@ -31,5 +31,16 @@ namespace RankinRetro.Repositories
         {
             return await _context.Brands.ToListAsync();
         }
+
+        public async Task<List<Category>> GetByCategory(int categoryId)
+        {
+            return await _context.Categories.Where(x => x.CategoryId == categoryId).ToListAsync();
+        }
+
+        public async Task<List<Brand>> GetByBrand(int brandId)
+        {
+            return await _context.Brands.Where(x => x.BrandId == brandId).ToListAsync();
+        }
+
     }
 }

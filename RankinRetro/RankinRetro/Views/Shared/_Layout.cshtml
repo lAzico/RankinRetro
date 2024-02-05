@@ -4,10 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - RankinRetro</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/RankinRetro.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+
+
 </head>
 <body>
     <header>
@@ -37,8 +40,7 @@
                         {
                             <li class="nav-item" style="margin-left:auto">
                                 <form asp-controller="Cart" asp-action="Details">
-                                <button class="btn btn-info">
-
+                                <button class="btn btn-outline-success">
                                         <i class="bi bi-basket"></i>
                                 </button>
                                 </form>
@@ -58,6 +60,7 @@
                             </li>
 
                         }
+
                     </ul>
                 </div>
             </div>
@@ -74,8 +77,6 @@
             &copy; 2023 - RankinRetro - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
@@ -86,3 +87,5 @@
     }
 </style>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

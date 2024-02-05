@@ -31,12 +31,15 @@ public class ImageService
                                                             AzureStorageConfig _storageConfig)
     {
 
+        List<string> thumbnailURLs = GetThumbNailUrls(_storageConfig, productName).Result;
+
         // Create a URI to the blob
         Uri blobUri = new Uri("https://" +
                               _storageConfig.AccountName +
                               ".blob.core.windows.net/" +
                               _storageConfig.ImageContainer +
                               "/" + productName + "/" + fileName);
+
 
         // Create StorageSharedKeyCredentials object by reading
         // the values from the configuration (appsettings.json)

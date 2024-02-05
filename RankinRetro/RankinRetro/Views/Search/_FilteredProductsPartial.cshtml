@@ -1,0 +1,71 @@
+﻿@using RankinRetro.ViewModels
+@model SearchViewModel
+
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Customer> SignInManager
+
+
+@foreach (var item in Model.Products)
+{
+    <div class="col-md-3" style="width:290px">
+        <div class="card mb-4 box-shadow" style="width: 290px">
+            <div class="card-header" style="height:630px; padding:4px">
+                <p class="card-text">@item.Name</p>
+                <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail" style="height: 430px; width: 280px; display: block;" src="@item.ImageURL" data-holder-rendered="true">
+                <div class="card-body" style="padding:0px">
+                    <p class="card-text" style="height:48px; margin-top:16px;">@item.Description<p />
+                </div>
+                <div class="card-body" style="padding:0px">
+                    <div class="btn-group">
+                        <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">
+                            <button class="btn btn-outline-primary">View</button>
+                        </a>
+                        <!--Checking if the user is an admin, if they are then it will display this if statement-->
+                        @if (User.IsInRole("admin") && SignInManager.IsSignedIn(User))
+                        {
+                            <a asp-controller="Product" asp-action="Edit" asp-route-id="@item.ProductId">
+                                <button class="btn btn-outline-warning">Edit</button>
+                            </a>
+                            <form asp-controller="Product" asp-action="DeleteProductHome" asp-route-id="@item.ProductId">
+                                <button class="btn btn-outline-danger">Delete</button>
+                            </form>
+                            <form method="post" action="~/Cart/AddItem">
+                                <input type="hidden" name="ProductId" value="@item.ProductId" />
+                                <input type="hidden" name="Quantity" value="1" />
+                                <button type="submit" class="btn btn-outline-success"><i class="bi bi-basket"></i></button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<style>
+    .advanced {
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+    }
+
+
+    .btn-secondary,
+    .btn-secondary:focus,
+    .btn-secondary:active {
+        color: #fff;
+        background-color: #00838f !important;
+        border-color: #00838f !important;
+        box-shadow: none;
+    }
+
+
+    .advanced {
+        color: #00838f !important;
+    }
+
+    .form-control:focus {
+        box-shadow: none;
+        border: 1px solid #00838f;
+    }
+</style>
+

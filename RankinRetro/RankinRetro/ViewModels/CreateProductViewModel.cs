@@ -19,6 +19,9 @@ namespace RankinRetro.ViewModels
         //This list is so the category ID can be compared against the categories for frontend display
 
         public List<Category> Categories { get; set; }
+        public int TypeId { get; set; }
+        //This list is so the type ID can be compared against the types for frontend display
+        public List<Types> Types { get; set; }
         public Size Size { get; set; }
         public Colour Colour { get; set; }
         public Material Material { get; set; }

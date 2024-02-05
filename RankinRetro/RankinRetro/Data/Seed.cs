@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Identity;
 using RankinRetro.Data;
 using RankinRetro.Data.Enum;
 using RankinRetro.Models;
@@ -17,6 +18,7 @@ namespace RunGroopWebApp.Data
 
                 context.Database.EnsureCreated();
 
+                //Categories
                 if (!context.Categories.Any())
                 {
                     context.Categories.AddRange(new List<Category>()
@@ -150,6 +152,7 @@ namespace RunGroopWebApp.Data
                                 });
                     context.SaveChanges();
                 }
+                //Products
                 if (!context.Products.Any())
                 {
                     context.Products.AddRange(new List<Product>()
@@ -161,6 +164,7 @@ namespace RunGroopWebApp.Data
                         Price = new decimal(49.99),
                         BrandId = 1,
                         CategoryId = 1,
+                        TypeId = 5,
                         Size = Size.S,
                         Colour = Colour.Black,
                         Material = Material.Cotton,
@@ -173,6 +177,7 @@ namespace RunGroopWebApp.Data
                         Price = new decimal(39.99),
                         BrandId = 2,
                         CategoryId = 2,
+                        TypeId = 4,
                         Size = Size.M,
                         Colour = Colour.Blue,
                         Material = Material.Denim,
@@ -185,18 +190,250 @@ namespace RunGroopWebApp.Data
                         Price = new decimal(59.99),
                         BrandId = 3,
                         CategoryId = 1,
+                        TypeId = 5,
                         Size = Size.L,
                         Colour = Colour.Red,
                         Material = Material.Silk,
                         ImageURL = "https://example.com/images/blouse1.jpg"
                     },
+                            new Product()
+                    {
+                        Name = "Leather Jacket",
+                        Description = "Add an edge to your style with a classic leather jacket.",
+                        Price = new decimal(99.99),
+                        BrandId = 2,
+                        CategoryId = 5,
+                        TypeId = 7,
+                        Size = Size.L,
+                        Colour = Colour.Black,
+                        Material = Material.Leather,
+                        ImageURL = "https://example.com/images/jacket1.jpg"
+                    },
+                    new Product()
+                    {
+                        Name = "Striped Sweater",
+                        Description = "Stay cozy and stylish in a striped sweater.",
+                        Price = new decimal(49.99),
+                        BrandId = 3,
+                        CategoryId = 2,
+                        TypeId = 6,
+                        Size = Size.S,
+                        Colour = Colour.Blue,
+                        Material = Material.Wool,
+                        ImageURL = "https://example.com/images/sweater1.jpg"
+                    },
+                    new Product()
+                    {
+                        Name = "Floral Print Dress",
+                        Description = "Add a touch of femininity with a floral print dress.",
+                        Price = new decimal(59.99),
+                        BrandId = 1,
+                        CategoryId = 1,
+                        TypeId = 5,
+                        Size = Size.M,
+                        Colour = Colour.Pink,
+                        Material = Material.Cotton,
+                        ImageURL = "https://example.com/images/dress2.jpg"
+                    },
+                    new Product()
+                    {
+                        Name = "Classic Black Blazer",
+                        Description = "Elevate your look with a classic black blazer.",
+                        Price = new decimal(79.99),
+                        BrandId = 2,
+                        CategoryId = 2,
+                        TypeId = 10,
+                        Size = Size.L,
+                        Colour = Colour.Black,
+                        Material = Material.Polyester,
+                        ImageURL = "https://example.com/images/blazer1.jpg"
+                    },
+                    new Product()
+                    {
+                        Name = "Ripped Skinny Jeans",
+                        Description = "Stay on-trend with ripped skinny jeans.",
+                        Price = new decimal(49.99),
+                        BrandId = 3,
+                        CategoryId = 2,
+                        TypeId = 4,
+                        Size = Size.S,
+                        Colour = Colour.Blue,
+                        Material = Material.Denim,
+                        ImageURL = "https://example.com/images/jeans2.jpg"
+                    },
+                    new Product()
+                    {
+                        Name = "Strappy Sandals",
+                        Description = "Step out in style with chic strappy sandals.",
+                        Price = new decimal(39.99),
+                        BrandId = 4,
+                        CategoryId = 6,
+                        TypeId = 8,
+                        Size = Size.M,
+                        Colour = Colour.Brown,
+                        Material = Material.Leather,
+                        ImageURL = "https://example.com/images/sandals1.jpg"
+                    },
+                    new Product()
+                    {
+                        Name = "Printed Swim Trunks",
+                        Description = "Make a statement at the beach with printed swim trunks.",
+                        Price = new decimal(29.99),
+                        BrandId = 5,
+                        CategoryId = 6,
+                        TypeId = 19,
+                        Size = Size.L,
+                        Colour = Colour.Green,
+                        Material = Material.Polyester,
+                        ImageURL = "https://example.com/images/swimtrunks1.jpg"
+                    },
+                    new Product()
+                    {
+                        Name = "Cozy Pajama Set",
+                        Description = "Stay comfortable all night in a cozy pajama set.",
+                        Price = new decimal(34.99),
+                        BrandId = 1,
+                        CategoryId = 7,
+                        TypeId = 22,
+                        Size = Size.XL,
+                        Colour = Colour.Blue,
+                        Material = Material.Cotton,
+                        ImageURL = "https://example.com/images/pajama1.jpg"
+},
                     });
                     context.SaveChanges();
                 }
+                //Types
+                if (!context.Types.Any())
+                {
+                    context.Types.AddRange(new List<Types>()
+                {
+                    new Types() 
+                    { 
+                        Name = "T-Shirt", 
+                        Description = "Comfy and casual, perfect for everyday wear." 
+                    },
+                    new Types() 
+                    {   Name = "Blouse", 
+                        Description = "Add a touch of elegance to your outfit with a flowy blouse." 
+                    },
+                    new Types() 
+                    {   
+                        Name = "Tank Top", 
+                        Description = "Stay cool and stylish in a breezy tank top." 
+                    },
+                    new Types() 
+                    { 
+                        Name = "Skinny Jeans", 
+                        Description = "A timeless classic, skinny jeans hug your curves for a flattering look." 
+                    },
+                    new Types() 
+                    { 
+                        Name = "Casual Shift Dress",
+                        Description = "Easy and breezy, a shift dress is a go-to for running errands or meeting friends." 
+                    },
+                    new Types() 
+                    { 
+                        Name = "Polo Shirt", 
+                        Description = "Classic and versatile, a polo shirt is perfect for business casual or weekend outings." 
+                    },
+                    new Types() 
+                    { 
+                        Name = "Henley Shirt", 
+                        Description = "With its button placket and relaxed fit, a henley shirt is a laid-back alternative to a t-shirt."
+                    },
+                    new Types() 
+                    { 
+                        Name = "Hooded Sweatshirt", 
+                        Description = "Cozy and comfortable, a hooded sweatshirt is ideal for lounging or staying warm on chilly days." 
+                    },
+                    new Types() 
+                    { 
+                        Name = "Chinos", 
+                        Description = "Dressy enough for work yet casual enough for weekend wear, chinos are a wardrobe staple." 
+                    },
+                    new Types() 
+                    { 
+                        Name = "Cargo Pants",
+                        Description = "Functional and stylish, cargo pants offer plenty of pockets for all your essentials." 
+                    },
+                    new Types() 
+                    { 
+                        Name = "Athletic Shorts", 
+                        Description = "Stay cool and comfortable in lightweight shorts perfect for working out or running errands." 
+                    },
+                    new Types() 
+                    { 
+                        Name = "Navy Slim-Fit Suit", 
+                        Description = "Make a confident statement in a timeless navy suit with a modern slim fit." 
+                    },
+                    new Types() 
+                    { 
+                        Name = "Grey Tweed Suit", 
+                        Description = "Add some texture and sophistication to your look with a classic grey tweed suit." 
+                    },
+                    new Types() 
+                    { 
+                        Name = "Khaki Chinos Suit", 
+                        Description = "Opt for a laid-back yet polished look with a versatile khaki chinos suit." 
+                    },
+                    new Types() 
+                    { 
+                        Name = "Graphic T-Shirt", 
+                        Description = "Let your child show their personality with a fun and colorful graphic t-shirt." 
+                    },
+                    new Types() { 
+                        Name = "Striped Polo Shirt", 
+                        Description = "Classic and cute, a striped polo shirt is perfect for school or playtime." 
+                    },
+                    new Types() 
+                    { 
+                        Name = "Hooded Romper", 
+                        Description = "Comfy and adorable, a hooded romper is perfect for little ones on the go." 
+                    },
+                    new Types() 
+                    { 
+                        Name = "Mesh Tank Top",
+                        Description = "Beat the heat in a breathable mesh tank top." 
+                    },
+                    new Types() 
+                    { 
+                        Name = "Performance Hoodie", 
+                        Description = "Keep warm and dry with a moisture-wicking hoodie perfect for pre - workout or cool - down."
+                    },
+                    new Types() 
+                    { 
+                        Name = "High-Waisted Leggings",
+                        Description= "Flatter your figure and stay secure with high-waisted leggings." 
+                    },
+                    new Types() 
+                    { 
+                        Name = "Running Shorts", 
+                        Description = "Move freely and comfortably in lightweight running shorts."
+                    }
+                });
+                    context.SaveChanges();
+                }
+                //Input azure storage config details
+/*                if (!context.Configs.Any())
+                {
+                    context.Configs.AddRange(new List<AzureStorageConfig>()
 
-
+                        {
+                        new AzureStorageConfig()
+                        {
+                            Id = "",
+                            AccountKey = "",
+                            AccountName = "",
+                            ImageContainer = "",
+                            ThumbnailContainer = ""
+                        }
+                        });
+                    context.SaveChanges();
+                }*/
             }
-        }
+            }
+        
 
         public static async Task SeedUsersAndRolesAsync(IApplicationBuilder applicationBuilder)
         {
